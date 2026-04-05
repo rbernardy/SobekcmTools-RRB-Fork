@@ -41,6 +41,9 @@ namespace SobekCM.Management_Tool
             InitializeComponent();
             BackColor = Color.FromArgb(240, 240, 240);
 
+            // Update window title with database server
+            Text = "Ad Hoc Reporting Display Form - (" + MainForm.CurrentDatabaseServer + ")";
+
             displaySet = Display_Set;
 
             // Check for values at each hierarchical level and author and publisher

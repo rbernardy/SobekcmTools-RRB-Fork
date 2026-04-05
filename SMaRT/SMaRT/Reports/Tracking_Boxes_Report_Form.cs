@@ -20,6 +20,9 @@ namespace SobekCM.Management_Tool.Reports
         {
             InitializeComponent();
 
+            // Update window title with database server
+            Text = "Tracking Boxes Report - (" + MainForm.CurrentDatabaseServer + ")";
+
             // Load the list of all tracking boxes
             listView1.Items.Clear();
             List<string> trackingBoxes = Engine_Database.All_Tracking_Boxes;

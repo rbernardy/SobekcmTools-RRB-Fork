@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Fragment>
+    <!-- Application Files Component Group -->
+    <ComponentGroup Id="ApplicationFiles" Directory="INSTALLFOLDER">
+      <Component Id="SMaRT.exe" Guid="*">
+        <File Id="SMaRT.exe" Source="$(var.SMaRT.TargetPath)" KeyPath="yes" />
+      </Component>
+      <Component Id="SMaRT.exe.config" Guid="*">
+        <File Id="SMaRT.exe.config" Source="$(var.SMaRT.TargetDir)SMaRT.exe.config" KeyPath="yes" />
+      </Component>
+    </ComponentGroup>
+
+    <!-- Custom Grid Component -->
+    <ComponentGroup Id="CustomGridComponent" Directory="INSTALLFOLDER">
+      <Component Id="Custom_Grid.dll" Guid="*">
+        <File Id="Custom_Grid.dll" Source="$(var.Custom_Grid.TargetPath)" KeyPath="yes" />
+      </Component>
+    </ComponentGroup>
+
+    <!-- SobekCM Libraries Component Group -->
+    <ComponentGroup Id="SobekCMLibraries" Directory="INSTALLFOLDER">
+      <Component Id="SobekCM_Core.dll" Guid="*">
+        <File Id="SobekCM_Core.dll" Source="$(var.SobekCM_Core.TargetPath)" KeyPath="yes" />
+      </Component>
+      <Component Id="SobekCM_Engine_Library.dll" Guid="*">
+        <File Id="SobekCM_Engine_Library.dll" Source="$(var.SobekCM_Engine_Library.TargetPath)" KeyPath="yes" />
+      </Component>
+      <Component Id="SobekCM_Resource_Database.dll" Guid="*">
+        <File Id="SobekCM_Resource_Database.dll" Source="$(var.SobekCM_Resource_Database.TargetPath)" KeyPath="yes" />
+      </Component>
+      <Component Id="SobekCM_Resource_Object.dll" Guid="*">
+        <File Id="SobekCM_Resource_Object.dll" Source="$(var.SobekCM_Resource_Object.TargetPath)" KeyPath="yes" />
+      </Component>
+      <Component Id="SobekCM_Tools.dll" Guid="*">
+        <File Id="SobekCM_Tools.dll" Source="$(var.SobekCM_Tools.TargetPath)" KeyPath="yes" />
+      </Component>
+    </ComponentGroup>
+
+    <!-- Database Access Component -->
+    <ComponentGroup Id="DatabaseAccessComponent" Directory="INSTALLFOLDER">
+      <Component Id="EngineAgnosticLayerDbAccess.dll" Guid="*">
+        <File Id="EngineAgnosticLayerDbAccess.dll" Source="$(var.EngineAgnosticLayerDbAccess.TargetPath)" KeyPath="yes" />
+      </Component>
+    </ComponentGroup>
+
+    <!-- Third-Party Core Libraries -->
+    <ComponentGroup Id="ThirdPartyCore" Directory="INSTALLFOLDER">
+      <Component Id="GemBox.Spreadsheet.dll" Guid="*">
+        <File Id="GemBox.Spreadsheet.dll" Source="$(var.ProjectDir)..\DLLs\GemBox.Spreadsheet.dll" KeyPath="yes" />
+      </Component>
+      <Component Id="itextsharp.dll" Guid="*">
+        <File Id="itextsharp.dll" Source="$(var.ProjectDir)..\DLLs\itextsharp.dll" KeyPath="yes" />
+      </Component>
+      <Component Id="Microsoft.ApplicationBlocks.Data.dll" Guid="*">
+        <File Id="Microsoft.ApplicationBlocks.Data.dll" Source="$(var.ProjectDir)..\DLLs\Microsoft.ApplicationBlocks.Data.dll" KeyPath="yes" />
+      </Component>
+    </ComponentGroup>
+
+    <!-- JIL Libraries -->
+    <ComponentGroup Id="JILLibraries" Directory="INSTALLFOLDER">
+      <Component Id="Jil.dll" Guid="*">
+        <File Id="Jil.dll" Source="$(var.ProjectDir)..\DLLs\JIL\Jil.dll" KeyPath="yes" />
+      </Component>
+      <Component Id="Sigil.dll" Guid="*">
+        <File Id="Sigil.dll" Source="$(var.ProjectDir)..\DLLs\JIL\Sigil.dll" KeyPath="yes" />
+      </Component>
+    </ComponentGroup>
+
+    <!-- Protobuf Libraries -->
+    <ComponentGroup Id="ProtobufLibraries" Directory="INSTALLFOLDER">
+      <Component Id="protobuf_net.dll" Guid="*">
+        <File Id="protobuf_net.dll" Source="$(var.ProjectDir)..\DLLs\Protobuf-net\protobuf-net.dll" KeyPath="yes" />
+      </Component>
+    </ComponentGroup>
+
+    <!-- Recaptcha Library -->
+    <ComponentGroup Id="RecaptchaLibrary" Directory="INSTALLFOLDER">
+      <Component Id="Recaptcha.dll" Guid="*">
+        <File Id="Recaptcha.dll" Source="$(var.ProjectDir)..\DLLs\ReCaptcha\Recaptcha.dll" KeyPath="yes" />
+      </Component>
+    </ComponentGroup>
+
+    <!-- Saxon Libraries -->
+    <ComponentGroup Id="SaxonLibraries" Directory="INSTALLFOLDER">
+      <Component Id="IKVM.OpenJDK.Charsets.dll" Guid="*">
+        <File Id="IKVM.OpenJDK.Charsets.dll" Source="$(var.ProjectDir)..\DLLs\Saxon\IKVM.OpenJDK.Charsets.dll" KeyPath="yes" />
+      </Component>
+      <Component Id="IKVM.OpenJDK.Core.dll" Guid="*">
+        <File Id="IKVM.OpenJDK.Core.dll" Source="$(var.ProjectDir)..\DLLs\Saxon\IKVM.OpenJDK.Core.dll" KeyPath="yes" />
+      </Component>
+      <Component Id="IKVM.OpenJDK.Text.dll" Guid="*">
+        <File Id="IKVM.OpenJDK.Text.dll" Source="$(var.ProjectDir)..\DLLs\Saxon\IKVM.OpenJDK.Text.dll" KeyPath="yes" />
+      </Component>
+      <Component Id="IKVM.OpenJDK.Util.dll" Guid="*">
+        <File Id="IKVM.OpenJDK.Util.dll" Source="$(var.ProjectDir)..\DLLs\Saxon\IKVM.OpenJDK.Util.dll" KeyPath="yes" />
+      </Component>
+      <Component Id="IKVM.OpenJDK.XML.API.dll" Guid="*">
+        <File Id="IKVM.OpenJDK.XML.API.dll" Source="$(var.ProjectDir)..\DLLs\Saxon\IKVM.OpenJDK.XML.API.dll" KeyPath="yes" />
+      </Component>
+      <Component Id="IKVM.Runtime.dll" Guid="*">
+        <File Id="IKVM.Runtime.dll" Source="$(var.ProjectDir)..\DLLs\Saxon\IKVM.Runtime.dll" KeyPath="yes" />
+      </Component>
+      <Component Id="saxon9he.dll" Guid="*">
+        <File Id="saxon9he.dll" Source="$(var.ProjectDir)..\DLLs\Saxon\saxon9he.dll" KeyPath="yes" />
+      </Component>
+      <Component Id="saxon9he_api.dll" Guid="*">
+        <File Id="saxon9he_api.dll" Source="$(var.ProjectDir)..\DLLs\Saxon\saxon9he-api.dll" KeyPath="yes" />
+      </Component>
+    </ComponentGroup>
+
+    <!-- SolrNet Libraries -->
+    <ComponentGroup Id="SolrNetLibraries" Directory="INSTALLFOLDER">
+      <Component Id="SolrNet.dll" Guid="*">
+        <File Id="SolrNet.dll" Source="$(var.ProjectDir)..\DLLs\SolrNet\SolrNet.dll" KeyPath="yes" />
+      </Component>
+      <Component Id="Microsoft.Practices.ServiceLocation.dll" Guid="*">
+        <File Id="Microsoft.Practices.ServiceLocation.dll" Source="$(var.ProjectDir)..\DLLs\SolrNet\Microsoft.Practices.ServiceLocation.dll" KeyPath="yes" />
+      </Component>
+    </ComponentGroup>
+
+    <!-- Zoom.Net Libraries -->
+    <ComponentGroup Id="ZoomNetLibraries" Directory="INSTALLFOLDER">
+      <Component Id="Zoom.Net.dll" Guid="*">
+        <File Id="Zoom.Net.dll" Source="$(var.ProjectDir)..\DLLs\Zoom.net\Zoom.Net.dll" KeyPath="yes" />
+      </Component>
+      <Component Id="Zoom.Net.YazSharp.dll" Guid="*">
+        <File Id="Zoom.Net.YazSharp.dll" Source="$(var.ProjectDir)..\DLLs\Zoom.net\Zoom.Net.YazSharp.dll" KeyPath="yes" />
+      </Component>
+      <Component Id="yaz.dll" Guid="*">
+        <File Id="yaz.dll" Source="$(var.ProjectDir)..\DLLs\Zoom.net\yaz.dll" KeyPath="yes" />
+      </Component>
+      <Component Id="libxml2.dll" Guid="*">
+        <File Id="libxml2.dll" Source="$(var.ProjectDir)..\DLLs\Zoom.net\libxml2.dll" KeyPath="yes" />
+      </Component>
+      <Component Id="libxslt.dll" Guid="*">
+        <File Id="libxslt.dll" Source="$(var.ProjectDir)..\DLLs\Zoom.net\libxslt.dll" KeyPath="yes" />
+      </Component>
+      <Component Id="iconv.dll" Guid="*">
+        <File Id="iconv.dll" Source="$(var.ProjectDir)..\DLLs\Zoom.net\iconv.dll" KeyPath="yes" />
+      </Component>
+      <Component Id="zlib1.dll" Guid="*">
+        <File Id="zlib1.dll" Source="$(var.ProjectDir)..\DLLs\Zoom.net\zlib1.dll" KeyPath="yes" />
+      </Component>
+      <Component Id="Zoom.Net.Factory.config" Guid="*">
+        <File Id="Zoom.Net.Factory.config" Source="$(var.ProjectDir)..\DLLs\Zoom.net\Zoom.Net.Factory.config" KeyPath="yes" />
+      </Component>
+    </ComponentGroup>
+
+    <!-- AppFabric Libraries -->
+    <ComponentGroup Id="AppFabricLibraries" Directory="INSTALLFOLDER">
+      <Component Id="Microsoft.ApplicationServer.Caching.Client.dll" Guid="*">
+        <File Id="Microsoft.ApplicationServer.Caching.Client.dll" Source="$(var.ProjectDir)..\DLLs\AppFabric\Microsoft.ApplicationServer.Caching.Client.dll" KeyPath="yes" />
+      </Component>
+      <Component Id="Microsoft.ApplicationServer.Caching.Core.dll" Guid="*">
+        <File Id="Microsoft.ApplicationServer.Caching.Core.dll" Source="$(var.ProjectDir)..\DLLs\AppFabric\Microsoft.ApplicationServer.Caching.Core.dll" KeyPath="yes" />
+      </Component>
+    </ComponentGroup>
+
+    <!-- Data Files -->
+    <ComponentGroup Id="DataFiles" Directory="DataFolder">
+      <Component Id="searchfields.xml" Guid="*">
+        <File Id="searchfields.xml" Source="$(var.ProjectDir)..\Data\searchfields.xml" KeyPath="yes" />
+      </Component>
+      <Component Id="sobekcm.config" Guid="*">
+        <File Id="sobekcm.config" Source="$(var.ProjectDir)..\Data\sobekcm.config" KeyPath="yes" />
+      </Component>
+      <Component Id="stopwords.xml" Guid="*">
+        <File Id="stopwords.xml" Source="$(var.ProjectDir)..\Data\stopwords.xml" KeyPath="yes" />
+      </Component>
+    </ComponentGroup>
+
+    <!-- Image Resources -->
+    <ComponentGroup Id="ImageResources" Directory="ImagesFolder">
+      <Component Id="SMaRT.ico" Guid="*">
+        <File Id="Images_SMaRT.ico" Source="$(var.ProjectDir)..\Images\SMaRT.ico" KeyPath="yes" />
+      </Component>
+      <Component Id="add_comment.jpg" Guid="*">
+        <File Id="add_comment.jpg" Source="$(var.ProjectDir)..\Images\add_comment.jpg" KeyPath="yes" />
+      </Component>
+      <Component Id="add_volume.jpg" Guid="*">
+        <File Id="add_volume.jpg" Source="$(var.ProjectDir)..\Images\add_volume.jpg" KeyPath="yes" />
+      </Component>
+      <Component Id="autofill_volumes.jpg" Guid="*">
+        <File Id="autofill_volumes.jpg" Source="$(var.ProjectDir)..\Images\autofill_volumes.jpg" KeyPath="yes" />
+      </Component>
+      <Component Id="copy.gif" Guid="*">
+        <File Id="copy.gif" Source="$(var.ProjectDir)..\Images\copy.gif" KeyPath="yes" />
+      </Component>
+      <Component Id="copy.jpg" Guid="*">
+        <File Id="copy.jpg" Source="$(var.ProjectDir)..\Images\copy.jpg" KeyPath="yes" />
+      </Component>
+      <Component Id="dark_resource.jpg" Guid="*">
+        <File Id="dark_resource.jpg" Source="$(var.ProjectDir)..\Images\dark_resource.jpg" KeyPath="yes" />
+      </Component>
+      <Component Id="edit_behaviors.jpg" Guid="*">
+        <File Id="edit_behaviors.jpg" Source="$(var.ProjectDir)..\Images\edit_behaviors.jpg" KeyPath="yes" />
+      </Component>
+      <Component Id="edit_hierarchy.jpg" Guid="*">
+        <File Id="edit_hierarchy.jpg" Source="$(var.ProjectDir)..\Images\edit_hierarchy.jpg" KeyPath="yes" />
+      </Component>
+      <Component Id="edit_metadata.jpg" Guid="*">
+        <File Id="edit_metadata.jpg" Source="$(var.ProjectDir)..\Images\edit_metadata.jpg" KeyPath="yes" />
+      </Component>
+      <Component Id="hide_discovery.jpg" Guid="*">
+        <File Id="hide_discovery.jpg" Source="$(var.ProjectDir)..\Images\hide_discovery.jpg" KeyPath="yes" />
+      </Component>
+      <Component Id="hide_group_info.jpg" Guid="*">
+        <File Id="hide_group_info.jpg" Source="$(var.ProjectDir)..\Images\hide_group_info.jpg" KeyPath="yes" />
+      </Component>
+      <Component Id="mass_update.jpg" Guid="*">
+        <File Id="mass_update.jpg" Source="$(var.ProjectDir)..\Images\mass_update.jpg" KeyPath="yes" />
+      </Component>
+      <Component Id="MSGBOX02.ICO" Guid="*">
+        <File Id="MSGBOX02.ICO" Source="$(var.ProjectDir)..\Images\MSGBOX02.ICO" KeyPath="yes" />
+      </Component>
+      <Component Id="private_resource.jpg" Guid="*">
+        <File Id="private_resource.jpg" Source="$(var.ProjectDir)..\Images\private_resource.jpg" KeyPath="yes" />
+      </Component>
+      <Component Id="public_resource.jpg" Guid="*">
+        <File Id="public_resource.jpg" Source="$(var.ProjectDir)..\Images\public_resource.jpg" KeyPath="yes" />
+      </Component>
+      <Component Id="restricted_resource.jpg" Guid="*">
+        <File Id="restricted_resource.jpg" Source="$(var.ProjectDir)..\Images\restricted_resource.jpg" KeyPath="yes" />
+      </Component>
+      <Component Id="show_discovery.jpg" Guid="*">
+        <File Id="show_discovery.jpg" Source="$(var.ProjectDir)..\Images\show_discovery.jpg" KeyPath="yes" />
+      </Component>
+      <Component Id="show_group_info.jpg" Guid="*">
+        <File Id="show_group_info.jpg" Source="$(var.ProjectDir)..\Images\show_group_info.jpg" KeyPath="yes" />
+      </Component>
+      <Component Id="Sobek1.jpg" Guid="*">
+        <File Id="Sobek1.jpg" Source="$(var.ProjectDir)..\Images\Sobek1.jpg" KeyPath="yes" />
+      </Component>
+      <Component Id="Sobek1.png" Guid="*">
+        <File Id="Sobek1.png" Source="$(var.ProjectDir)..\Images\Sobek1.png" KeyPath="yes" />
+      </Component>
+      <Component Id="UF.gif" Guid="*">
+        <File Id="UF.gif" Source="$(var.ProjectDir)..\Images\UF.gif" KeyPath="yes" />
+      </Component>
+      <Component Id="view_comment.jpg" Guid="*">
+        <File Id="view_comment.jpg" Source="$(var.ProjectDir)..\Images\view_comment.jpg" KeyPath="yes" />
+      </Component>
+      <Component Id="view_mets.jpg" Guid="*">
+        <File Id="view_mets.jpg" Source="$(var.ProjectDir)..\Images\view_mets.jpg" KeyPath="yes" />
+      </Component>
+    </ComponentGroup>
+
+    <!-- Start Menu Shortcuts -->
+    <ComponentGroup Id="StartMenuShortcuts" Directory="ApplicationProgramsFolder">
+      <Component Id="ApplicationShortcut" Guid="*">
+        <Shortcut Id="ApplicationStartMenuShortcut"
+                  Name="UFDC SMaRT"
+                  Description="SobekCM Management Tool"
+                  Target="[INSTALLFOLDER]SMaRT.exe"
+                  WorkingDirectory="INSTALLFOLDER"
+                  Icon="SMaRT.ico" />
+        <Shortcut Id="UninstallProduct"
+                  Name="Uninstall UFDC SMaRT"
+                  Target="[SystemFolder]msiexec.exe"
+                  Arguments="/x [ProductCode]"
+                  Description="Uninstalls UFDC SMaRT" />
+        <RemoveFolder Id="ApplicationProgramsFolder" On="uninstall"/>
+        <RegistryValue Root="HKCU" Key="Software\UF\SMaRT" Name="installed" Type="integer" Value="1" KeyPath="yes"/>
+      </Component>
+    </ComponentGroup>
+  </Fragment>
+</Wix>

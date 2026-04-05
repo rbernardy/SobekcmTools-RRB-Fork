@@ -497,6 +497,8 @@ namespace SobekCM.Engine_Library.Settings
 
             StreamReader reader = new StreamReader(ConfigFile);
             XmlTextReader xmlReader = new XmlTextReader(reader);
+            bool foundDefaultDb = false;
+            
             while (xmlReader.Read())
             {
                 if (xmlReader.NodeType == XmlNodeType.Element)
@@ -504,22 +506,69 @@ namespace SobekCM.Engine_Library.Settings
                     string node_name = xmlReader.Name.ToLower();
                     switch (node_name)
                     {
+                        case "database":
+                            // Check if this is the default database
+                            bool isDefault = false;
+                            if (xmlReader.MoveToAttribute("default"))
+                            {
+                                isDefault = xmlReader.Value.ToLower() == "true";
+                            }
+                            
+                            // Only process if this is the default or if we haven't found a default yet
+                            if (isDefault || !foundDefaultDb)
+                            {
+                                // Read the nested connection_string element
+                                while (xmlReader.Read())
+                                {
+                                    if (xmlReader.NodeType == XmlNodeType.Element && xmlReader.Name.ToLower() == "connection_string")
+                                    {
+                                        Database_Instance_Configuration newDb = new Database_Instance_Configuration();
+                                        if (xmlReader.MoveToAttribute("type"))
+                                        {
+                                            if (xmlReader.Value.ToLower() == "postgresql")
+                                                newDb.Database_Type = EalDbTypeEnum.PostgreSQL;
+                                        }
+                                        if (xmlReader.MoveToAttribute("isHosted"))
+                                        {
+                                            if (xmlReader.Value.ToLower() == "true")
+                                                SettingsObject.Servers.isHosted = true;
+                                        }
+          
+                                        xmlReader.Read();
+                                        newDb.Connection_String = xmlReader.Value;
+                                        SettingsObject.Database_Connection = newDb;
+                                        foundDefaultDb = true;
+                                        break;
+                                    }
+                                    else if (xmlReader.NodeType == XmlNodeType.EndElement && xmlReader.Name.ToLower() == "database")
+                                    {
+                                        break;
+                                    }
+                                }
+                            }
+                            break;
+                            
                         case "connection_string":
-                            Database_Instance_Configuration newDb = new Database_Instance_Configuration();
-                            if (xmlReader.MoveToAttribute("type"))
+                            // Support old format (direct connection_string element)
+                            if (!foundDefaultDb)
                             {
-                                if (xmlReader.Value.ToLower() == "postgresql")
-                                    newDb.Database_Type = EalDbTypeEnum.PostgreSQL;
+                                Database_Instance_Configuration newDb = new Database_Instance_Configuration();
+                                if (xmlReader.MoveToAttribute("type"))
+                                {
+                                    if (xmlReader.Value.ToLower() == "postgresql")
+                                        newDb.Database_Type = EalDbTypeEnum.PostgreSQL;
+                                }
+                                if (xmlReader.MoveToAttribute("isHosted"))
+                                {
+                                    if (xmlReader.Value.ToLower() == "true")
+                                        SettingsObject.Servers.isHosted = true;
+                                }
+      
+                                xmlReader.Read();
+                                newDb.Connection_String = xmlReader.Value;
+                                SettingsObject.Database_Connection = newDb;
+                                foundDefaultDb = true;
                             }
-                            if (xmlReader.MoveToAttribute("isHosted"))
-                            {
-                                if (xmlReader.Value.ToLower() == "true")
-                                    SettingsObject.Servers.isHosted = true;
-                            }
-  
-                            xmlReader.Read();
-                            newDb.Connection_String = xmlReader.Value;
-                            SettingsObject.Database_Connection = newDb;
                             break;
 
                         case "erroremails":

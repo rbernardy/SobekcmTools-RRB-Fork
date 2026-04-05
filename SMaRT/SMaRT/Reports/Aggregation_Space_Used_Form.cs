@@ -20,6 +20,9 @@ namespace SobekCM.Management_Tool.Reports
         {
             InitializeComponent();
 
+            // Update window title with database server
+            Text = "Aggregation Space Utilized - (" + MainForm.CurrentDatabaseServer + ")";
+
             onlineComboBox.SelectedIndex = 0;
             archiveComboBox.SelectedIndex = 0;
         }

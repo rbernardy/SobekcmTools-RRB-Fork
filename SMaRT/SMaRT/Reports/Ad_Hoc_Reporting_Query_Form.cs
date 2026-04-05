@@ -26,6 +26,9 @@ namespace SobekCM.Management_Tool
             InitializeComponent();
             BackColor = Color.FromArgb(240, 240, 240);
 
+            // Update window title with database server
+            Text = "Ad Hoc Reporting Query Form - (" + MainForm.CurrentDatabaseServer + ")";
+
             sobekCM_Item_Discovery_Panel1.Finish_Loading_Data();
         }
 
@@ -42,6 +45,9 @@ namespace SobekCM.Management_Tool
         {
             InitializeComponent();
             BackColor = Color.FromArgb(240, 240, 240);
+
+            // Update window title with database server
+            Text = "Ad Hoc Reporting Query Form - (" + MainForm.CurrentDatabaseServer + ")";
 
             sobekCM_Item_Discovery_Panel1.Finish_Loading_Data();
             sobekCM_Item_Discovery_Panel1.Current_Search = Initial_Search;

@@ -44,7 +44,7 @@ namespace SobekCM.Management_Tool
 
 
             // Personalize several labels and controls now for the SobekCM Instance Name
-            Text = "Retrieve " + Engine_ApplicationCache_Gateway.Settings.System.System_Abbreviation + " Items Form";
+            Text = "Retrieve " + Engine_ApplicationCache_Gateway.Settings.System.System_Abbreviation + " Items Form - (" + MainForm.CurrentDatabaseServer + ")";
             mainLabel.Text = "Retrieve " + Engine_ApplicationCache_Gateway.Settings.System.System_Abbreviation + " Items";
             queryLabel.Text = Engine_ApplicationCache_Gateway.Settings.System.System_Abbreviation + " Query:";
         }

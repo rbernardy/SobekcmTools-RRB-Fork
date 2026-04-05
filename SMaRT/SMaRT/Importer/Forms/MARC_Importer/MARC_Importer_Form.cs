@@ -68,6 +68,9 @@ namespace SobekCM.Management_Tool.Importer.Forms
 			// Initialize this form 
 			InitializeComponent();
 
+            // Update window title with database server
+            Text = "MARC Importer - (" + MainForm.CurrentDatabaseServer + ")";
+
             Constructor_Helper();
 
             workingFolder = Environment.GetFolderPath(Environment.SpecialFolder.Personal) + "\\SMaRT";

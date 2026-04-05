@@ -34,6 +34,9 @@ namespace SobekCM.Management_Tool.Importer.Forms
         {
             InitializeComponent();
 
+            // Update window title with database server
+            Text = "SpreadSheet Importer - (" + MainForm.CurrentDatabaseServer + ")";
+
             CheckForIllegalCrossThreadCalls = false;
             tickler = String.Empty;
 

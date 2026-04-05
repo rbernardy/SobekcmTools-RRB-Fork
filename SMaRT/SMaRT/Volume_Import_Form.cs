@@ -37,6 +37,9 @@ namespace SobekCM.Management_Tool
             BackColor = Color.FromArgb(240, 240, 240);
             visibilityComboBox.SelectedIndex = 1;
 
+            // Update window title with database server
+            Text = "Volume Import and Auto-Fill Form - (" + MainForm.CurrentDatabaseServer + ")";
+
             
 
             bibidLabel.Hide();

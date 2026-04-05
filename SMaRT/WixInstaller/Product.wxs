@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <?define ProductVersion="3.52.0" ?>
+  <?define ProductName="UFDC SMaRT" ?>
+  <?define Manufacturer="University of Florida Digital Collections" ?>
+  <?define UpgradeCode="{A1B2C3D4-E5F6-7890-ABCD-EF1234567890}" ?>
+  
+  <Product Id="*" 
+           Name="$(var.ProductName)" 
+           Language="1033" 
+           Version="$(var.ProductVersion)" 
+           Manufacturer="$(var.Manufacturer)" 
+           UpgradeCode="$(var.UpgradeCode)">
+    
+    <Package InstallerVersion="200" 
+             Compressed="yes" 
+             InstallScope="perMachine" 
+             Platform="x86"
+             Description="SobekCM Management Tool for managing digital library content"
+             Comments="SMaRT - SobekCM Management Tool" />
+
+    <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+    <MediaTemplate EmbedCab="yes" />
+
+    <!-- Application Icon -->
+    <Icon Id="SMaRT.ico" SourceFile="$(var.ProjectDir)..\Images\SMaRT.ico" />
+    <Property Id="ARPPRODUCTICON" Value="SMaRT.ico" />
+    
+    <!-- Add/Remove Programs properties -->
+    <Property Id="ARPHELPLINK" Value="http://sobekrepository.org" />
+    <Property Id="ARPURLINFOABOUT" Value="http://sobekrepository.org" />
+
+    <!-- .NET Framework 4.8 Prerequisite Check -->
+    <PropertyRef Id="NETFRAMEWORK48" />
+    <Condition Message="This application requires .NET Framework 4.8. Please install the .NET Framework 4.8 and run this installer again.">
+      <![CDATA[Installed OR NETFRAMEWORK48]]>
+    </Condition>
+
+    <!-- Upgrade Logic -->
+    <Upgrade Id="$(var.UpgradeCode)">
+      <UpgradeVersion OnlyDetect="no"
+                      Property="PREVIOUSFOUND"
+                      Minimum="1.0.0" IncludeMinimum="yes"
+                      Maximum="$(var.ProductVersion)" IncludeMaximum="no" />
+    </Upgrade>
+
+    <!-- Directory Structure -->
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <!-- Program Files -->
+      <Directory Id="ProgramFilesFolder">
+        <Directory Id="ManufacturerFolder" Name="University of Florida">
+          <Directory Id="INSTALLFOLDER" Name="SMaRT">
+            <!-- Data subdirectory -->
+            <Directory Id="DataFolder" Name="Data" />
+            <!-- Images subdirectory -->
+            <Directory Id="ImagesFolder" Name="Images" />
+          </Directory>
+        </Directory>
+      </Directory>
+      
+      <!-- Start Menu -->
+      <Directory Id="ProgramMenuFolder">
+        <Directory Id="ApplicationProgramsFolder" Name="UFDC SMaRT" />
+      </Directory>
+    </Directory>
+
+    <!-- Main Feature -->
+    <Feature Id="MainFeature" 
+             Title="UFDC SMaRT" 
+             Description="Complete installation of UFDC SMaRT application" 
+             Level="1" 
+             ConfigurableDirectory="INSTALLFOLDER">
+      <ComponentGroupRef Id="ApplicationFiles" />
+      <ComponentGroupRef Id="CustomGridComponent" />
+      <ComponentGroupRef Id="SobekCMLibraries" />
+      <ComponentGroupRef Id="DatabaseAccessComponent" />
+      <ComponentGroupRef Id="ThirdPartyCore" />
+      <ComponentGroupRef Id="JILLibraries" />
+      <ComponentGroupRef Id="ProtobufLibraries" />
+      <ComponentGroupRef Id="RecaptchaLibrary" />
+      <ComponentGroupRef Id="SaxonLibraries" />
+      <ComponentGroupRef Id="SolrNetLibraries" />
+      <ComponentGroupRef Id="ZoomNetLibraries" />
+      <ComponentGroupRef Id="AppFabricLibraries" />
+      <ComponentGroupRef Id="DataFiles" />
+      <ComponentGroupRef Id="ImageResources" />
+      <ComponentGroupRef Id="StartMenuShortcuts" />
+    </Feature>
+
+    <!-- UI Configuration -->
+    <UIRef Id="WixUI_InstallDir" />
+    <Property Id="WIXUI_INSTALLDIR" Value="INSTALLFOLDER" />
+    
+    <!-- Install Sequence -->
+    <InstallExecuteSequence>
+      <RemoveExistingProducts After="InstallInitialize" />
+    </InstallExecuteSequence>
+  </Product>
+</Wix>

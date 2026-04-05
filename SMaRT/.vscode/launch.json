@@ -1,0 +1,14 @@
+{
+    // Note: .NET Framework debugging requires official Microsoft VS Code
+    // This configuration will build and run the application without debugging
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Build and Run SMaRT",
+            "type": "PowerShell",
+            "request": "launch",
+            "script": "${workspaceFolder}/SMaRT/bin/Debug/SMaRT.exe",
+            "preLaunchTask": "build"
+        }
+    ]
+}

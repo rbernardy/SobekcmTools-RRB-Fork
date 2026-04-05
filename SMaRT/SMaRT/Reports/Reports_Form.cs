@@ -33,6 +33,9 @@ namespace SobekCM.Management_Tool.Reports
 	        InitializeComponent();
 	        BackColor = Color.FromArgb(240, 240, 240);
 
+            // Update window title with database server
+            Text = "Reporting Module - (" + MainForm.CurrentDatabaseServer + ")";
+
 	        string username = Environment.UserName.ToLower();
 	        if ((username.IndexOf("msulliva") < 0) && (username.IndexOf("laurien") < 0))
 	        {

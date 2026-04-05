@@ -26,6 +26,9 @@ namespace SobekCM.Management_Tool.Reports
             InitializeComponent();
             BackColor = Color.FromArgb(240, 240, 240);
 
+            // Update window title with database server
+            Text = "Newspapers Without Serial Hierarchy Report - (" + MainForm.CurrentDatabaseServer + ")";
+
             DataTable sourceTable = Engine_Database.Newspapers_Without_Serial_Info;
 
             iconPanel = new CustomGrid_Panel();

@@ -18,6 +18,9 @@ namespace SobekCM.Management_Tool.Importer.Forms
         {
             InitializeComponent();
 
+            // Update window title with database server
+            Text = "Importing Module - (" + MainForm.CurrentDatabaseServer + ")";
+
             baseImporter_Processor.Default_Institution_Code = default_institution_code;
             baseImporter_Processor.Default_Institution_Statement = default_institution_statement;
 

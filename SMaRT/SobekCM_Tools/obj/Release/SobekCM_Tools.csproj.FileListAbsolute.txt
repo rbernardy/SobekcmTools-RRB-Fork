@@ -6,3 +6,14 @@ C:\GitRepository\SobekcmTools\SMaRT\SobekCM_Tools\bin\Release\protobuf-net.xml
 C:\GitRepository\SobekcmTools\SMaRT\SobekCM_Tools\obj\Release\SobekCM.Tools.Properties.Resources.resources
 C:\GitRepository\SobekcmTools\SMaRT\SobekCM_Tools\obj\Release\SobekCM_Tools.csproj.GenerateResource.Cache
 C:\GitRepository\SobekcmTools\SMaRT\SobekCM_Tools\obj\Release\SobekCM_Tools.dll
+C:\Users\rbernardy\Documents\github\SobekcmTools\SMaRT\SobekCM_Tools\bin\Release\SobekCM_Tools.XML
+C:\Users\rbernardy\Documents\github\SobekcmTools\SMaRT\SobekCM_Tools\bin\Release\SobekCM_Tools.dll
+C:\Users\rbernardy\Documents\github\SobekcmTools\SMaRT\SobekCM_Tools\bin\Release\protobuf-net.dll
+C:\Users\rbernardy\Documents\github\SobekcmTools\SMaRT\SobekCM_Tools\bin\Release\protobuf-net.pdb
+C:\Users\rbernardy\Documents\github\SobekcmTools\SMaRT\SobekCM_Tools\bin\Release\protobuf-net.xml
+C:\Users\rbernardy\Documents\github\SobekcmTools\SMaRT\SobekCM_Tools\obj\Release\SobekCM_Tools.csproj.AssemblyReference.cache
+C:\Users\rbernardy\Documents\github\SobekcmTools\SMaRT\SobekCM_Tools\obj\Release\SobekCM.Tools.Properties.Resources.resources
+C:\Users\rbernardy\Documents\github\SobekcmTools\SMaRT\SobekCM_Tools\obj\Release\SobekCM_Tools.csproj.GenerateResource.cache
+C:\Users\rbernardy\Documents\github\SobekcmTools\SMaRT\SobekCM_Tools\obj\Release\SobekCM_Tools.csproj.CoreCompileInputs.cache
+C:\Users\rbernardy\Documents\github\SobekcmTools\SMaRT\SobekCM_Tools\obj\Release\SobekCM_.76E4EA54.Up2Date
+C:\Users\rbernardy\Documents\github\SobekcmTools\SMaRT\SobekCM_Tools\obj\Release\SobekCM_Tools.dll

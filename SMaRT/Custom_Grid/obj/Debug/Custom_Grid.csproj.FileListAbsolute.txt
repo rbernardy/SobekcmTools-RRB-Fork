@@ -9,3 +9,16 @@ C:\GitRepository\SobekcmTools\SMaRT\Custom_Grid\obj\Debug\DLC.Custom_Grid.Custom
 C:\GitRepository\SobekcmTools\SMaRT\Custom_Grid\obj\Debug\Custom_Grid.csproj.GenerateResource.Cache
 C:\GitRepository\SobekcmTools\SMaRT\Custom_Grid\obj\Debug\Custom_Grid_1_3.dll
 C:\GitRepository\SobekcmTools\SMaRT\Custom_Grid\obj\Debug\Custom_Grid_1_3.pdb
+C:\Users\rbernardy\Documents\github\SobekcmTools\SMaRT\Custom_Grid\bin\Debug\Custom_Grid_1_3.dll
+C:\Users\rbernardy\Documents\github\SobekcmTools\SMaRT\Custom_Grid\bin\Debug\Custom_Grid_1_3.pdb
+C:\Users\rbernardy\Documents\github\SobekcmTools\SMaRT\Custom_Grid\bin\Debug\Custom_Grid.xml
+C:\Users\rbernardy\Documents\github\SobekcmTools\SMaRT\Custom_Grid\bin\Debug\GemBox.Spreadsheet.dll
+C:\Users\rbernardy\Documents\github\SobekcmTools\SMaRT\Custom_Grid\bin\Debug\GemBox.Spreadsheet.xml
+C:\Users\rbernardy\Documents\github\SobekcmTools\SMaRT\Custom_Grid\obj\Debug\Custom_Grid.csproj.AssemblyReference.cache
+C:\Users\rbernardy\Documents\github\SobekcmTools\SMaRT\Custom_Grid\obj\Debug\DLC.Custom_Grid.CustomGrid_Panel.resources
+C:\Users\rbernardy\Documents\github\SobekcmTools\SMaRT\Custom_Grid\obj\Debug\DLC.Custom_Grid.Custom_Panel_w_Scroll_Events.resources
+C:\Users\rbernardy\Documents\github\SobekcmTools\SMaRT\Custom_Grid\obj\Debug\Custom_Grid.csproj.GenerateResource.cache
+C:\Users\rbernardy\Documents\github\SobekcmTools\SMaRT\Custom_Grid\obj\Debug\Custom_Grid.csproj.CoreCompileInputs.cache
+C:\Users\rbernardy\Documents\github\SobekcmTools\SMaRT\Custom_Grid\obj\Debug\Custom_G.4EF652F3.Up2Date
+C:\Users\rbernardy\Documents\github\SobekcmTools\SMaRT\Custom_Grid\obj\Debug\Custom_Grid_1_3.dll
+C:\Users\rbernardy\Documents\github\SobekcmTools\SMaRT\Custom_Grid\obj\Debug\Custom_Grid_1_3.pdb

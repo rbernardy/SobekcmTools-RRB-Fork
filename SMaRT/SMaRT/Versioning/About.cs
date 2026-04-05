@@ -238,7 +238,7 @@ namespace SobekCM.Management_Tool
             this.developedByLabel.Name = "developedByLabel";
             this.developedByLabel.Size = new System.Drawing.Size(288, 41);
             this.developedByLabel.TabIndex = 1;
-            this.developedByLabel.Text = "Developed by Mark Sullivan for the Digital Library Center at the University of Fl" +
+            this.developedByLabel.Text = "Developed by Mark Sullivan (with improvements by Richard Bernardy) for the Digital Library Center at the University of Fl" +
                 "orida George A. Smathers Libraries";
             this.developedByLabel.Click += new System.EventHandler(this.About_Click);
             // 

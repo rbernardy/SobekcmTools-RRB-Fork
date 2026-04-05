@@ -9,3 +9,16 @@ C:\GitRepository\SobekcmTools\SMaRT\SobekCM_Tools\obj\Debug\SobekCM.Tools.Proper
 C:\GitRepository\SobekcmTools\SMaRT\SobekCM_Tools\obj\Debug\SobekCM_Tools.csproj.GenerateResource.Cache
 C:\GitRepository\SobekcmTools\SMaRT\SobekCM_Tools\obj\Debug\SobekCM_Tools.dll
 C:\GitRepository\SobekcmTools\SMaRT\SobekCM_Tools\obj\Debug\SobekCM_Tools.pdb
+C:\Users\rbernardy\Documents\github\SobekcmTools\SMaRT\SobekCM_Tools\bin\Debug\SobekCM_Tools.XML
+C:\Users\rbernardy\Documents\github\SobekcmTools\SMaRT\SobekCM_Tools\bin\Debug\SobekCM_Tools.dll
+C:\Users\rbernardy\Documents\github\SobekcmTools\SMaRT\SobekCM_Tools\bin\Debug\SobekCM_Tools.pdb
+C:\Users\rbernardy\Documents\github\SobekcmTools\SMaRT\SobekCM_Tools\bin\Debug\protobuf-net.dll
+C:\Users\rbernardy\Documents\github\SobekcmTools\SMaRT\SobekCM_Tools\bin\Debug\protobuf-net.pdb
+C:\Users\rbernardy\Documents\github\SobekcmTools\SMaRT\SobekCM_Tools\bin\Debug\protobuf-net.xml
+C:\Users\rbernardy\Documents\github\SobekcmTools\SMaRT\SobekCM_Tools\obj\Debug\SobekCM_Tools.csproj.AssemblyReference.cache
+C:\Users\rbernardy\Documents\github\SobekcmTools\SMaRT\SobekCM_Tools\obj\Debug\SobekCM.Tools.Properties.Resources.resources
+C:\Users\rbernardy\Documents\github\SobekcmTools\SMaRT\SobekCM_Tools\obj\Debug\SobekCM_Tools.csproj.GenerateResource.cache
+C:\Users\rbernardy\Documents\github\SobekcmTools\SMaRT\SobekCM_Tools\obj\Debug\SobekCM_Tools.csproj.CoreCompileInputs.cache
+C:\Users\rbernardy\Documents\github\SobekcmTools\SMaRT\SobekCM_Tools\obj\Debug\SobekCM_.76E4EA54.Up2Date
+C:\Users\rbernardy\Documents\github\SobekcmTools\SMaRT\SobekCM_Tools\obj\Debug\SobekCM_Tools.dll
+C:\Users\rbernardy\Documents\github\SobekcmTools\SMaRT\SobekCM_Tools\obj\Debug\SobekCM_Tools.pdb

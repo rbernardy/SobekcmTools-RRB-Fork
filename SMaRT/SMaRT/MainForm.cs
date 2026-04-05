@@ -8,9 +8,11 @@ using System.IO;
 using System.Windows.Forms;
 using SobekCM.Engine_Library;
 using SobekCM.Engine_Library.ApplicationState;
+using SobekCM.Engine_Library.Database;
 using SobekCM.Management_Tool.Importer.Forms;
 using SobekCM.Management_Tool.Reports;
 using SobekCM.Management_Tool.Versioning;
+using SobekCM_Resource_Database;
 
 #endregion
 
@@ -34,6 +36,12 @@ namespace SobekCM.Management_Tool
 	    private LinkLabel reportingModuleLinkLabel;
 	    private MenuItem retrievePackagesMenuItem;
 	    private LinkLabel viewItemsLinkLabel;
+        private MenuItem selectDbServerMenuItem;
+        private MenuItem liveDbMenuItem;
+        private MenuItem testDbMenuItem;
+
+        // Static property to track current database server
+        public static string CurrentDatabaseServer { get; set; } = "Live";
 
 	    #region Constructor
 
@@ -52,6 +60,8 @@ namespace SobekCM.Management_Tool
 	        viewItemsLinkLabel.Text = "View " + Engine_ApplicationCache_Gateway.Settings.System.System_Abbreviation + " Items";
 	        reportingModuleLinkLabel.Text = Engine_ApplicationCache_Gateway.Settings.System.System_Abbreviation + " Reporting Module";
 
+            // Set the window title with database server
+            UpdateWindowTitle();
 	    }
 
 	    public override sealed Color BackColor
@@ -59,6 +69,12 @@ namespace SobekCM.Management_Tool
 	        get { return base.BackColor; }
 	        set { base.BackColor = value; }
 	    }
+
+        /// <summary> Updates the window title to include the current database server </summary>
+        private void UpdateWindowTitle()
+        {
+            this.Text = $"SobekCM Management and Reporting Tool (SMaRT) - ({CurrentDatabaseServer})";
+        }
 
 	    #endregion
 
@@ -75,6 +91,9 @@ namespace SobekCM.Management_Tool
 	        this.cMmainMenu = new System.Windows.Forms.MainMenu(this.components);
 	        this.actionMenuItem = new System.Windows.Forms.MenuItem();
 	        this.retrievePackagesMenuItem = new System.Windows.Forms.MenuItem();
+	        this.selectDbServerMenuItem = new System.Windows.Forms.MenuItem();
+	        this.liveDbMenuItem = new System.Windows.Forms.MenuItem();
+	        this.testDbMenuItem = new System.Windows.Forms.MenuItem();
 	        this.exitMenuItem = new System.Windows.Forms.MenuItem();
 	        this.helpMenuItem = new System.Windows.Forms.MenuItem();
 	        this.aboutMenuItem = new System.Windows.Forms.MenuItem();
@@ -97,7 +116,7 @@ namespace SobekCM.Management_Tool
 	        this.mainLabel.ForeColor = System.Drawing.Color.MediumBlue;
 	        this.mainLabel.Location = new System.Drawing.Point(16, 9);
 	        this.mainLabel.Name = "mainLabel";
-	        this.mainLabel.Size = new System.Drawing.Size(435, 32);
+	        this.mainLabel.Size = new System.Drawing.Size(528, 32);
 	        this.mainLabel.TabIndex = 2;
 	        this.mainLabel.Text = "SobekCM Manager";
 	        this.mainLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -113,6 +132,7 @@ namespace SobekCM.Management_Tool
 	        this.actionMenuItem.Index = 0;
 	        this.actionMenuItem.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
 	                                                                                       this.retrievePackagesMenuItem,
+	                                                                                       this.selectDbServerMenuItem,
 	                                                                                       this.exitMenuItem});
 	        this.actionMenuItem.Text = "&Actions";
 	        // 
@@ -122,9 +142,30 @@ namespace SobekCM.Management_Tool
 	        this.retrievePackagesMenuItem.Text = "Retrieve " + Engine_ApplicationCache_Gateway.Settings.System.System_Abbreviation + " Packages";
 	        this.retrievePackagesMenuItem.Click += new System.EventHandler(this.retrievePackagesMenuItem_Click);
 	        // 
+	        // selectDbServerMenuItem
+	        // 
+	        this.selectDbServerMenuItem.Index = 1;
+	        this.selectDbServerMenuItem.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+	                                                                                               this.liveDbMenuItem,
+	                                                                                               this.testDbMenuItem});
+	        this.selectDbServerMenuItem.Text = "Select DB Server";
+	        // 
+	        // liveDbMenuItem
+	        // 
+	        this.liveDbMenuItem.Index = 0;
+	        this.liveDbMenuItem.Text = "Live";
+	        this.liveDbMenuItem.Checked = true;
+	        this.liveDbMenuItem.Click += new System.EventHandler(this.liveDbMenuItem_Click);
+	        // 
+	        // testDbMenuItem
+	        // 
+	        this.testDbMenuItem.Index = 1;
+	        this.testDbMenuItem.Text = "Test";
+	        this.testDbMenuItem.Click += new System.EventHandler(this.testDbMenuItem_Click);
+	        // 
 	        // exitMenuItem
 	        // 
-	        this.exitMenuItem.Index = 1;
+	        this.exitMenuItem.Index = 2;
 	        this.exitMenuItem.Text = "Exit";
 	        this.exitMenuItem.Click += new System.EventHandler(this.exitButton_Click);
 	        // 
@@ -189,7 +230,7 @@ namespace SobekCM.Management_Tool
 	        this.panel1.Controls.Add(this.linkLabel1);
 	        this.panel1.Location = new System.Drawing.Point(21, 44);
 	        this.panel1.Name = "panel1";
-	        this.panel1.Size = new System.Drawing.Size(430, 288);
+	        this.panel1.Size = new System.Drawing.Size(523, 288);
 	        this.panel1.TabIndex = 0;
 	        // 
 	        // viewItemsLinkLabel
@@ -234,7 +275,7 @@ namespace SobekCM.Management_Tool
 	        // 
 	        this.AutoScaleBaseSize = new System.Drawing.Size(5, 14);
 	        this.BackColor = System.Drawing.SystemColors.Control;
-	        this.ClientSize = new System.Drawing.Size(467, 380);
+	        this.ClientSize = new System.Drawing.Size(560, 380);
 	        this.Controls.Add(this.panel1);
 	        this.Controls.Add(this.exitButton);
 	        this.Controls.Add(this.mainLabel);
@@ -242,7 +283,7 @@ namespace SobekCM.Management_Tool
 	        this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 	        this.MaximizeBox = false;
 	        this.Menu = this.cMmainMenu;
-	        this.MinimumSize = new System.Drawing.Size(483, 418);
+	        this.MinimumSize = new System.Drawing.Size(576, 418);
 	        this.Name = "MainForm";
 	        this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
 	        this.Text = "SobekCM Management and Reporting Tool (SMaRT)";
@@ -395,6 +436,79 @@ namespace SobekCM.Management_Tool
             Hide();
             reportingForm.ShowDialog();
             Show();
+        }
+
+        private void liveDbMenuItem_Click(object sender, EventArgs e)
+        {
+            // Update the checked state
+            liveDbMenuItem.Checked = true;
+            testDbMenuItem.Checked = false;
+
+            // Switch to live database
+            SwitchDatabase("live", "Live");
+        }
+
+        private void testDbMenuItem_Click(object sender, EventArgs e)
+        {
+            // Update the checked state
+            liveDbMenuItem.Checked = false;
+            testDbMenuItem.Checked = true;
+
+            // Switch to test database
+            SwitchDatabase("test", "Test");
+        }
+
+        private void SwitchDatabase(string databaseName, string displayName)
+        {
+            try
+            {
+                // Read the config file and get the connection string for the selected database
+                string configFile = AppDomain.CurrentDomain.BaseDirectory + "\\config\\sobekcm.config";
+                if (!File.Exists(configFile))
+                {
+                    MessageBox.Show("Configuration file not found: " + configFile, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                System.Xml.XmlDocument doc = new System.Xml.XmlDocument();
+                doc.Load(configFile);
+
+                // Find the database node with the matching name
+                System.Xml.XmlNode databaseNode = doc.SelectSingleNode($"//database[@name='{databaseName}']");
+                if (databaseNode == null)
+                {
+                    MessageBox.Show($"Database configuration '{databaseName}' not found in config file.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                System.Xml.XmlNode connectionNode = databaseNode.SelectSingleNode("connection_string");
+                if (connectionNode == null)
+                {
+                    MessageBox.Show($"Connection string not found for database '{databaseName}'.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                string connectionString = connectionNode.InnerText;
+
+                // Update the connection strings
+                Engine_Database.Connection_String = connectionString;
+                SobekCM_Item_Database.Connection_String = connectionString;
+
+                // Reload the settings from the new database
+                Engine_ApplicationCache_Gateway.RefreshSettings();
+
+                // Update the current database server
+                CurrentDatabaseServer = displayName;
+
+                // Update this window's title
+                UpdateWindowTitle();
+
+                MessageBox.Show($"Successfully switched to {displayName} database.", "Database Changed", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error switching database: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
 

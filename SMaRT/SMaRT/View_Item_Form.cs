@@ -50,6 +50,9 @@ namespace SobekCM.Management_Tool
             InitializeComponent();
             BackColor = Color.FromArgb(240, 240, 240);
 
+            // Update window title with database server
+            Text = "View Item Details Form - (" + MainForm.CurrentDatabaseServer + ")";
+
             bibid = BibID;
             vid = VID;
             itemid = ItemID;

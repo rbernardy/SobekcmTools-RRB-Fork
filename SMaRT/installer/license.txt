@@ -1,0 +1,29 @@
+UFDC SMaRT - SobekCM Management Tool
+Copyright (c) University of Florida Digital Collections
+
+END-USER LICENSE AGREEMENT
+
+This software is provided by the University of Florida Digital Collections for use in managing digital library content through the SobekCM platform.
+
+GRANT OF LICENSE
+
+The University of Florida grants you a non-exclusive, non-transferable license to use this software for its intended purpose of managing SobekCM digital library content.
+
+RESTRICTIONS
+
+You may not:
+- Modify, reverse engineer, decompile, or disassemble the software
+- Remove or alter any copyright notices or proprietary legends
+- Distribute, sublicense, or transfer the software to third parties without authorization
+
+DISCLAIMER OF WARRANTY
+
+THIS SOFTWARE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE SOFTWARE IS WITH YOU.
+
+LIMITATION OF LIABILITY
+
+IN NO EVENT SHALL THE UNIVERSITY OF FLORIDA BE LIABLE FOR ANY DAMAGES WHATSOEVER (INCLUDING, WITHOUT LIMITATION, DAMAGES FOR LOSS OF BUSINESS PROFITS, BUSINESS INTERRUPTION, LOSS OF BUSINESS INFORMATION, OR OTHER PECUNIARY LOSS) ARISING OUT OF THE USE OF OR INABILITY TO USE THIS SOFTWARE.
+
+ACCEPTANCE
+
+By installing this software, you acknowledge that you have read this agreement, understand it, and agree to be bound by its terms and conditions.

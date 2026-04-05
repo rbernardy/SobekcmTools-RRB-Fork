@@ -57,6 +57,9 @@ namespace SobekCM.Management_Tool
             InitializeComponent();
             BackColor = Color.FromArgb(240, 240, 240);
 
+            // Update window title with database server
+            Text = "View Item Group Details Form - (" + MainForm.CurrentDatabaseServer + ")";
+
             // Set some personalization and customization for the SobekCM Instance Name
             openWebContextMenuItem.Text = "Open Item in " + Engine_ApplicationCache_Gateway.Settings.System.System_Abbreviation;
 
