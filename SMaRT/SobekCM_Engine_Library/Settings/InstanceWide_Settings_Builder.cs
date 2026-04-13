@@ -283,9 +283,11 @@ namespace SobekCM.Engine_Library.Settings
 
                 // If this is running in debug, set base directory to this one
 #if DEBUG
-                    string baseDir = System.Web.HttpContext.Current.Server.MapPath("~");
-                    SettingsObject.Servers.Base_Directory = baseDir;
-                    SettingsObject.Servers.In_Process_Submission_Location = Path.Combine(baseDir, "mySobek", "InProcess");
+                // string baseDir = System.Web.HttpContext.Current.Server.MapPath("~");
+                // rrb 2026-04-12 8:12 AM - this is a C# .Net 4.8 GUI project, not web-base running under IIS so this code makes so sense while debuggings
+                string baseDir = AppDomain.CurrentDomain.BaseDirectory;
+                SettingsObject.Servers.Base_Directory = baseDir;
+                SettingsObject.Servers.In_Process_Submission_Location = Path.Combine(baseDir, "mySobek", "InProcess");
 #endif
 
                 return true;

@@ -15,6 +15,7 @@ using SobekCM.Engine_Library.Configuration;
 using SobekCM.Engine_Library.Database;
 using SobekCM.Engine_Library.Settings;
 using SobekCM.Engine_Library.Skins;
+using SobekCM_Resource_Database;
 
 #endregion
 
@@ -449,12 +450,42 @@ namespace SobekCM.Engine_Library.ApplicationState
             {
                 lock (settingsLock)
                 {
-                    if (settings == null)
-                        settings = InstanceWide_Settings_Builder.Build_Settings();
+                    // Capture current connection string before refresh to preserve runtime database selection
+                    // This fixes the bug where RefreshSettings() would overwrite a user-selected database
+                    // with the default from the config file
+                    string currentConnectionString = Engine_Database.Connection_String;
+
+                    // If we have a current connection string (runtime database selection), 
+                    // use the overload that takes a Database_Instance_Configuration to ensure
+                    // settings are loaded from the CURRENT database, not the config file default
+                    if (!string.IsNullOrEmpty(currentConnectionString))
+                    {
+                        // Create a Database_Instance_Configuration with the current connection string
+                        Database_Instance_Configuration dbConfig = new Database_Instance_Configuration();
+                        dbConfig.Connection_String = currentConnectionString;
+                        
+                        if (settings == null)
+                            settings = InstanceWide_Settings_Builder.Build_Settings(dbConfig);
+                        else
+                        {
+                            InstanceWide_Settings newSettings = InstanceWide_Settings_Builder.Build_Settings(dbConfig);
+                            settings = newSettings;
+                        }
+
+                        // Ensure connection strings are set correctly after settings load
+                        Engine_Database.Connection_String = currentConnectionString;
+                        SobekCM_Item_Database.Connection_String = currentConnectionString;
+                    }
                     else
                     {
-                        InstanceWide_Settings newSettings = InstanceWide_Settings_Builder.Build_Settings();
-                        settings = newSettings;
+                        // No runtime database selection - use default behavior (read from config file)
+                        if (settings == null)
+                            settings = InstanceWide_Settings_Builder.Build_Settings();
+                        else
+                        {
+                            InstanceWide_Settings newSettings = InstanceWide_Settings_Builder.Build_Settings();
+                            settings = newSettings;
+                        }
                     }
                 }
 

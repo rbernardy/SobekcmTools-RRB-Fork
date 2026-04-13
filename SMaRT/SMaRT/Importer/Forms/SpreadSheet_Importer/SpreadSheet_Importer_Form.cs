@@ -37,6 +37,9 @@ namespace SobekCM.Management_Tool.Importer.Forms
             // Update window title with database server
             Text = "SpreadSheet Importer - (" + MainForm.CurrentDatabaseServer + ")";
 
+            // Display the current database connection string for debugging
+            labelConnectionString.Text = "DB: " + SobekCM.Engine_Library.Database.Engine_Database.Connection_String;
+
             CheckForIllegalCrossThreadCalls = false;
             tickler = String.Empty;
 

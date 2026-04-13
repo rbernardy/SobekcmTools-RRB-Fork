@@ -47,6 +47,7 @@ namespace SobekCM.Management_Tool.Importer.Forms
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.pnlConstants = new System.Windows.Forms.Panel();
             this.step4Label = new System.Windows.Forms.Label();
+            this.labelConnectionString = new System.Windows.Forms.Label();
             this.labelStatus = new System.Windows.Forms.Label();
             this.mainPanel = new System.Windows.Forms.Panel();
             this.previewCheckBox = new System.Windows.Forms.CheckBox();
@@ -267,6 +268,18 @@ namespace SobekCM.Management_Tool.Importer.Forms
             this.step4Label.TabIndex = 29;
             this.step4Label.Text = "Step 4: Click the Execute button";
             // 
+            // labelConnectionString
+            // 
+            this.labelConnectionString.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.labelConnectionString.BackColor = System.Drawing.Color.Transparent;
+            this.labelConnectionString.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelConnectionString.ForeColor = System.Drawing.Color.DarkBlue;
+            this.labelConnectionString.Location = new System.Drawing.Point(29, 567);
+            this.labelConnectionString.Name = "labelConnectionString";
+            this.labelConnectionString.Size = new System.Drawing.Size(310, 18);
+            this.labelConnectionString.TabIndex = 33;
+            this.labelConnectionString.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
             // labelStatus
             // 
             this.labelStatus.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
@@ -353,6 +366,7 @@ namespace SobekCM.Management_Tool.Importer.Forms
             this.Controls.Add(this.previewCheckBox);
             this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.mainPanel);
+            this.Controls.Add(this.labelConnectionString);
             this.Controls.Add(this.labelStatus);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
@@ -392,6 +406,7 @@ namespace SobekCM.Management_Tool.Importer.Forms
         private System.Windows.Forms.Panel pnlConstants;
         private System.Windows.Forms.Label step3Label;
         private System.Windows.Forms.Label step4Label;
+        private System.Windows.Forms.Label labelConnectionString;
         private System.Windows.Forms.Label labelStatus;
         private System.Windows.Forms.Panel mainPanel;
         private System.Windows.Forms.CheckBox previewCheckBox;

@@ -148,3 +148,14 @@ $RECYCLE.BIN
 
 # Mac crap
 .DS_Store
+
+.kiro/
+!.kiro/specs/
+!.kiro/steering/
+
+.vs/
+
+**/obj/
+**/bin/
+
+.vscode/

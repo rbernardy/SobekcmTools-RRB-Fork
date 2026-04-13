@@ -3786,6 +3786,7 @@ namespace SobekCM_Resource_Database
                 param_list[3] = new EalDbParameter("@Local_Cat_Number", aleph);
 
                 // Execute this query stored procedure
+                
                 DataSet resultSet = EalDbAccess.ExecuteDataset(DatabaseType, connectionString, CommandType.StoredProcedure, "SobekCM_Check_For_Record_Existence", param_list);
 
                 if (resultSet != null)

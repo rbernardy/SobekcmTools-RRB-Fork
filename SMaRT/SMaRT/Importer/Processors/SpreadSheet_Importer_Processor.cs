@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using SobekCM.Resource_Object;
 using SobekCM.Resource_Object.Bib_Info;
 using System.Threading;
+using SobekCM.Management_Tool;
 
 namespace SobekCM.Management_Tool.Importer
 {
@@ -96,22 +97,31 @@ namespace SobekCM.Management_Tool.Importer
         public void Do_Work()
         {
             string username = System.Security.Principal.WindowsIdentity.GetCurrent().Name;
+            LoggingWindow.Log($"Starting spreadsheet import. User: {username}, Preview mode: {preview_mode}");
+            LoggingWindow.Log($"Total rows to process: {inputDataTbl.Rows.Count}");
 
             try
             {
+                int rowNumber = 0;
 
                 // check for empty rows in the input table
                 foreach (DataRow row in inputDataTbl.Rows)
                 {
+                    rowNumber++;
+                    LoggingWindow.Log($"Processing row {rowNumber} of {inputDataTbl.Rows.Count}");
+
                     // Save this row in case there is an exception caught
                     currentRow = row;
 
                     // Load the data and constant into a SobekCM_Item object
+                    LoggingWindow.Log($"  Loading data from row {rowNumber}...");
                     SobekCM_Item newItem = Load_Data_From_DataRow_And_Constants(row);
 
                     // If that was successful, continnue
                     if (newItem != null)
                     {
+                        LoggingWindow.Log($"  Item loaded: BibID={newItem.BibID}, VID={newItem.VID}");
+
                         // If there is a series, bib title but no bib id, use that title as the bib id as well
                         if ((newItem.Behaviors.GroupTitle.Length > 0) && (newItem.BibID.Length == 0))
                             newItem.BibID = newItem.Behaviors.GroupTitle;
@@ -121,15 +131,19 @@ namespace SobekCM.Management_Tool.Importer
 
                         // Save to the tracking database
                         bool success = true;
+                        LoggingWindow.Log($"  Checking existence and saving to database...");
                         success = base.Check_For_Existence_And_Save(newItem, row, String.Empty, matching_message, "Spreadsheet Importer GUI", preview_mode);
+                        LoggingWindow.Log($"  Database save result: {(success ? "SUCCESS" : "FAILED")}");
 
                         // If that was successful, save a new METS file and add to item list
                         if (success)
                         {
                             // Save the METS
+                            LoggingWindow.Log($"  Saving METS file...");
                             newItem.METS_Header.Creator_Software = "Spreadsheet Importer";
                             newItem.METS_Header.Creator_Individual = username;
                             save_to_mets(newItem, preview_mode);
+                            LoggingWindow.Log($"  METS file saved for {newItem.BibID}_{newItem.VID}");
 
                             // Also, save this bib id into the lookup
                             if ((original_bibid.Length > 0) && (original_bibid != newItem.BibID) && ( !base.Provided_Bib_To_New_Bib.ContainsKey( original_bibid )))
@@ -139,10 +153,15 @@ namespace SobekCM.Management_Tool.Importer
                             }
                         }
                     }
+                    else
+                    {
+                        LoggingWindow.Log($"  Row {rowNumber} is empty or invalid, skipping");
+                    }
 
                     // check stopThread flag to see if processing should contine                  
                     if (stopThread)
                     {
+                        LoggingWindow.Log("Processing stopped by user");
                         // write message to indicate where processing stopped
                         row["Messages"] += " Processing stopped by user.  This is the last row processed.";
                         item_import_comments += " Processing stopped by user.  This is the last row processed.";
@@ -164,16 +183,18 @@ namespace SobekCM.Management_Tool.Importer
                     }
                 } // end of processing loop 
 
+                LoggingWindow.Log($"Processing loop complete. Records processed: {recordsProcessed}");
 
                 if (stopThread)
                 {
-
+                    LoggingWindow.Log("Work stopped by user");
                     // Fire the event that the entire work has been stopped
                     OnComplete(999999);
 
                 }
                 else
                 {
+                    LoggingWindow.Log($"Import complete. Processed: {recordsProcessed}, Saved: {recordsSavedToDB}, Skipped: {recordsSkipped}, Errors: {errorCnt}");
 
                     // display messagebox that import is complete
                     if (preview_mode)
@@ -201,6 +222,7 @@ namespace SobekCM.Management_Tool.Importer
             }
             catch (System.Threading.ThreadAbortException)
             {
+                LoggingWindow.Log("Thread aborted");
                 // A ThreadAbortException has been invoked on the
                 // Processor thread.  This exception will be caught here
                 // in addition to being caught in the delegate method
@@ -209,6 +231,8 @@ namespace SobekCM.Management_Tool.Importer
             }
             catch (Exception e)
             {
+                LoggingWindow.Log($"ERROR: {e.Message}");
+                LoggingWindow.Log($"Stack trace: {e.StackTrace}");
                 // display the error message
                 DLC.Tools.Forms.ErrorMessageBox.Show("Error encountered while processing!\n\n" + e.Message, "DLC Importer Error", e);
                 try

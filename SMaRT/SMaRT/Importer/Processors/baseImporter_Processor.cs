@@ -9,6 +9,7 @@ using SobekCM.Resource_Object;
 using System.Text.RegularExpressions;
 using SobekCM.Resource_Object.Utilities;
 using SobekCM_Resource_Database;
+using SobekCM.Management_Tool;
 
 namespace SobekCM.Management_Tool.Importer
 {
@@ -174,6 +175,9 @@ namespace SobekCM.Management_Tool.Importer
 
         protected bool Check_For_Existence_And_Save(SobekCM_Item bibPackage, DataRow currentRow, string related_file, string message, string importer_bib_source, bool preview_mode )
         {
+            LoggingWindow.Log($"    Check_For_Existence_And_Save: BibID={bibPackage.BibID}, VID={bibPackage.VID}, preview_mode={preview_mode}");
+            LoggingWindow.Log($"    Connection string: {Engine_Database.Connection_String}");
+            
             // reset local variables
             Matching_Record_Choice_Enum matching_record_dialog_form_selected_value = Matching_Record_Choice_Enum.Undefined;
             item_import_comments = String.Empty;
@@ -186,8 +190,10 @@ namespace SobekCM.Management_Tool.Importer
             }
 
             // Does this Bibliographic record already exist in the tracking database?
+            LoggingWindow.Log($"    Checking for record existence in database...");
             DataRow[] selected = null;
             DataTable matchingRows = SobekCM_Resource_Database.SobekCM_Item_Database.Check_For_Record_Existence(bibPackage.BibID, bibPackage.VID, bibPackage.Bib_Info.OCLC_Record, bibPackage.Bib_Info.ALEPH_Record);
+            LoggingWindow.Log($"    Database check complete. Matching rows: {(matchingRows != null ? matchingRows.Rows.Count : 0)}");
             if ((matchingRows != null) && (matchingRows.Rows.Count > 0))
             {
                 // check if the BibID already exists

@@ -39,6 +39,9 @@ namespace SobekCM.Management_Tool
         private MenuItem selectDbServerMenuItem;
         private MenuItem liveDbMenuItem;
         private MenuItem testDbMenuItem;
+        private MenuItem loggingModeMenuItem;
+        private MenuItem loggingOffMenuItem;
+        private MenuItem loggingOnMenuItem;
 
         // Static property to track current database server
         public static string CurrentDatabaseServer { get; set; } = "Live";
@@ -94,6 +97,9 @@ namespace SobekCM.Management_Tool
 	        this.selectDbServerMenuItem = new System.Windows.Forms.MenuItem();
 	        this.liveDbMenuItem = new System.Windows.Forms.MenuItem();
 	        this.testDbMenuItem = new System.Windows.Forms.MenuItem();
+	        this.loggingModeMenuItem = new System.Windows.Forms.MenuItem();
+	        this.loggingOffMenuItem = new System.Windows.Forms.MenuItem();
+	        this.loggingOnMenuItem = new System.Windows.Forms.MenuItem();
 	        this.exitMenuItem = new System.Windows.Forms.MenuItem();
 	        this.helpMenuItem = new System.Windows.Forms.MenuItem();
 	        this.aboutMenuItem = new System.Windows.Forms.MenuItem();
@@ -133,6 +139,7 @@ namespace SobekCM.Management_Tool
 	        this.actionMenuItem.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
 	                                                                                       this.retrievePackagesMenuItem,
 	                                                                                       this.selectDbServerMenuItem,
+	                                                                                       this.loggingModeMenuItem,
 	                                                                                       this.exitMenuItem});
 	        this.actionMenuItem.Text = "&Actions";
 	        // 
@@ -163,9 +170,30 @@ namespace SobekCM.Management_Tool
 	        this.testDbMenuItem.Text = "Test";
 	        this.testDbMenuItem.Click += new System.EventHandler(this.testDbMenuItem_Click);
 	        // 
+	        // loggingModeMenuItem
+	        // 
+	        this.loggingModeMenuItem.Index = 2;
+	        this.loggingModeMenuItem.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+	                                                                                               this.loggingOffMenuItem,
+	                                                                                               this.loggingOnMenuItem});
+	        this.loggingModeMenuItem.Text = "Logging Mode";
+	        // 
+	        // loggingOffMenuItem
+	        // 
+	        this.loggingOffMenuItem.Index = 0;
+	        this.loggingOffMenuItem.Text = "Off";
+	        this.loggingOffMenuItem.Checked = true;
+	        this.loggingOffMenuItem.Click += new System.EventHandler(this.loggingOffMenuItem_Click);
+	        // 
+	        // loggingOnMenuItem
+	        // 
+	        this.loggingOnMenuItem.Index = 1;
+	        this.loggingOnMenuItem.Text = "On";
+	        this.loggingOnMenuItem.Click += new System.EventHandler(this.loggingOnMenuItem_Click);
+	        // 
 	        // exitMenuItem
 	        // 
-	        this.exitMenuItem.Index = 2;
+	        this.exitMenuItem.Index = 3;
 	        this.exitMenuItem.Text = "Exit";
 	        this.exitMenuItem.Click += new System.EventHandler(this.exitButton_Click);
 	        // 
@@ -509,6 +537,29 @@ namespace SobekCM.Management_Tool
             {
                 MessageBox.Show($"Error switching database: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        private void loggingOffMenuItem_Click(object sender, EventArgs e)
+        {
+            // Update the checked state
+            loggingOffMenuItem.Checked = true;
+            loggingOnMenuItem.Checked = false;
+
+            // Disable logging
+            LoggingWindow.LoggingEnabled = false;
+            LoggingWindow.HideWindow();
+        }
+
+        private void loggingOnMenuItem_Click(object sender, EventArgs e)
+        {
+            // Update the checked state
+            loggingOffMenuItem.Checked = false;
+            loggingOnMenuItem.Checked = true;
+
+            // Enable logging and show the window
+            LoggingWindow.LoggingEnabled = true;
+            LoggingWindow.ShowWindow();
+            LoggingWindow.Log("Logging enabled");
         }
 
 
