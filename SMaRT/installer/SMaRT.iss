@@ -7,17 +7,17 @@
 AppId={{A7F3B8C2-4D5E-4A1B-9C3D-8E7F6A5B4C3D}}
 
 ; Application information displayed in installer and Programs & Features
-AppName=UFDC SMaRT
+AppName=UFDC SMaRT Per-User
 AppVersion=3.52.5
 AppPublisher=University of Florida Digital Collections
 AppPublisherURL=http://ufdc.ufl.edu
 AppSupportURL=http://ufdc.ufl.edu
 AppUpdatesURL=http://ufdc.ufl.edu
 
-; Default installation directory - uses {autopf} which resolves to Program Files (x86) on 64-bit systems
-; This is appropriate for .NET Framework 4.8 applications
-DefaultDirName={autopf}\University of Florida\SMaRT
-DefaultGroupName=UFDC SMaRT
+; Default installation directory - uses {localappdata} for per-user installation without admin rights
+; Installs to C:\Users\[username]\AppData\Local\University of Florida\SMaRT
+DefaultDirName={localappdata}\University of Florida\SMaRT
+DefaultGroupName=UFDC SMaRT Per-User
 
 ; Allow user to choose custom installation directory
 DisableDirPage=no
@@ -36,15 +36,15 @@ SolidCompression=yes
 ArchitecturesInstallIn64BitMode=x64
 ArchitecturesAllowed=x64
 
-; Privileges and security
-PrivilegesRequired=admin
+; Privileges and security - 'lowest' allows installation without admin rights
+PrivilegesRequired=lowest
 PrivilegesRequiredOverridesAllowed=dialog
 
 ; License agreement
 LicenseFile=license.txt
 
 ; Uninstall configuration
-UninstallDisplayName=UFDC SMaRT
+UninstallDisplayName=UFDC SMaRT Per-User
 UninstallDisplayIcon={app}\SMaRT.exe
 
 ; Version information displayed in Programs & Features
@@ -158,14 +158,15 @@ Source: "..\Images\*"; DestDir: "{app}\Images"; Flags: ignoreversion recursesubd
 
 [Icons]
 ; ============================================================================
-; SHORTCUTS
+; SHORTCUTS (per-user locations for non-admin install)
 ; ============================================================================
-; Start Menu shortcuts
-Name: "{group}\UFDC SMaRT"; Filename: "{app}\SMaRT.exe"; IconFilename: "{app}\Images\SMaRT.ico"; Comment: "Launch UFDC SMaRT"
-Name: "{group}\Uninstall UFDC SMaRT"; Filename: "{uninstallexe}"; Comment: "Uninstall UFDC SMaRT"
+; Start Menu shortcuts - {userprograms} is the user's Start Menu Programs folder
+Name: "{userprograms}\UFDC SMaRT Per-User\UFDC SMaRT Per-User"; Filename: "{app}\SMaRT.exe"; IconFilename: "{app}\Images\SMaRT.ico"; Comment: "Launch UFDC SMaRT Per-User"
+Name: "{userprograms}\UFDC SMaRT Per-User\Uninstall UFDC SMaRT Per-User"; Filename: "{uninstallexe}"; Comment: "Uninstall UFDC SMaRT Per-User"
 
 ; Desktop shortcut (optional, controlled by desktopicon task)
-Name: "{autodesktop}\UFDC SMaRT"; Filename: "{app}\SMaRT.exe"; IconFilename: "{app}\Images\SMaRT.ico"; Comment: "Launch UFDC SMaRT"; Tasks: desktopicon
+; {userdesktop} is the current user's desktop folder
+Name: "{userdesktop}\UFDC SMaRT Per-User"; Filename: "{app}\SMaRT.exe"; IconFilename: "{app}\Images\SMaRT.ico"; Comment: "Launch UFDC SMaRT Per-User"; Tasks: desktopicon
 
 [Tasks]
 Name: "desktopicon"; Description: "Create a desktop shortcut"; GroupDescription: "Additional icons:"
@@ -175,7 +176,7 @@ Name: "desktopicon"; Description: "Create a desktop shortcut"; GroupDescription:
 ; POST-INSTALLATION ACTIONS
 ; ============================================================================
 ; Optional launch of SMaRT after installation completes
-Filename: "{app}\SMaRT.exe"; Description: "Launch UFDC SMaRT"; Flags: nowait postinstall skipifsilent unchecked
+Filename: "{app}\SMaRT.exe"; Description: "Launch UFDC SMaRT Per-User"; Flags: nowait postinstall skipifsilent unchecked
 
 [Code]
 // Check if .NET Framework 4.8 is installed

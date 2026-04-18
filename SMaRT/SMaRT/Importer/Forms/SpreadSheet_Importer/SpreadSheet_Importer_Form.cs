@@ -498,6 +498,13 @@ namespace SobekCM.Management_Tool.Importer.Forms
 
         void processor_Complete(int New_Progress)
         {
+            // Use Invoke to update UI controls from the background thread
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new Action(() => processor_Complete(New_Progress)));
+                return;
+            }
+
             // Check to see if Processor thread should be stopped
             if ((this.processor != null) && (this.processor.StopThread))
             {
@@ -549,8 +556,9 @@ namespace SobekCM.Management_Tool.Importer.Forms
                         // enable form controls on the Importer form                    
                         this.Enable_FormControls();
 
-                        // show the Importer form
-                        this.ShowDialog();
+                        // show the Importer form - use Show() instead of ShowDialog() 
+                        // since the form is already displayed modally
+                        this.Show();
                     }
                 }
                 catch { }
@@ -589,20 +597,31 @@ namespace SobekCM.Management_Tool.Importer.Forms
                     // enable form controls on the Importer form                    
                     this.Enable_FormControls();
 
-                    // show the Importer form
-                    this.ShowDialog();
+                    // show the Importer form - use Show() instead of ShowDialog() 
+                    // since the form is already displayed modally
+                    this.Show();
                 }
             }    
         }
 
         void processor_New_Progress(int New_Progress)
         {
+            // Use Invoke to update UI controls from the background thread
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new Action(() => processor_New_Progress(New_Progress)));
+                return;
+            }
+
             // Just increment the progress bar
             progressBar1.Value = New_Progress % progressBar1.Maximum;
 
-
             // update status label
             labelStatus.Text = "Processed " + progressBar1.Value.ToString("#,##0;") + " of " + progressBar1.Maximum.ToString("#,##0;") + " records";
+            
+            // Force the UI to refresh
+            labelStatus.Refresh();
+            progressBar1.Refresh();
         }
 
         #region Method to export as excel
@@ -1156,6 +1175,47 @@ namespace SobekCM.Management_Tool.Importer.Forms
                     }
                     else
                     {
+                        // DIAGNOSTIC: Show the builder input folder that will be used
+                        string builderInputFolder = SobekCM.Engine_Library.ApplicationState.Engine_ApplicationCache_Gateway.Settings.Builder.Main_Builder_Input_Folder;
+                        string currentDb = MainForm.CurrentDatabaseServer;
+                        string connectionString = SobekCM.Engine_Library.Database.Engine_Database.Connection_String;
+                        
+                        // Extract just the server and database name from connection string for display
+                        string dbInfo = connectionString;
+                        try 
+                        {
+                            var parts = connectionString.Split(';');
+                            string server = "";
+                            string database = "";
+                            foreach (var part in parts)
+                            {
+                                if (part.Trim().StartsWith("data source=", StringComparison.OrdinalIgnoreCase))
+                                    server = part.Trim().Substring(12);
+                                else if (part.Trim().StartsWith("initial catalog=", StringComparison.OrdinalIgnoreCase))
+                                    database = part.Trim().Substring(16);
+                            }
+                            if (!string.IsNullOrEmpty(server) && !string.IsNullOrEmpty(database))
+                                dbInfo = $"{server} / {database}";
+                        }
+                        catch { }
+
+                        string diagnosticMessage = $"DIAGNOSTIC INFO - Please verify before proceeding:\n\n" +
+                            $"Current Database: {currentDb}\n" +
+                            $"DB Connection: {dbInfo}\n\n" +
+                            $"METS files will be written to:\n{builderInputFolder}\n\n" +
+                            $"Is this the correct inbound folder for the {currentDb} environment?\n\n" +
+                            $"Click YES to proceed with import, NO to cancel.";
+
+                        DialogResult result = MessageBox.Show(diagnosticMessage, "Confirm Builder Input Folder", 
+                            MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                        
+                        if (result == DialogResult.No)
+                        {
+                            this.executeButton.Button_Text = "EXECUTE";
+                            this.cancelButton.Button_Text = "EXIT";
+                            return;
+                        }
+
                         // Import Records                   
                         this.Import_Records(this.excelDataTbl);
                     }
