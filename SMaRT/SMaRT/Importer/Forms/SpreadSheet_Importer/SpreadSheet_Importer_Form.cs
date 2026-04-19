@@ -613,11 +613,14 @@ namespace SobekCM.Management_Tool.Importer.Forms
                 return;
             }
 
+            // Clamp progress value to maximum to prevent wrapping
+            int clampedProgress = Math.Min(New_Progress, progressBar1.Maximum);
+            
             // Just increment the progress bar
-            progressBar1.Value = New_Progress % progressBar1.Maximum;
+            progressBar1.Value = clampedProgress;
 
             // update status label
-            labelStatus.Text = "Processed " + progressBar1.Value.ToString("#,##0;") + " of " + progressBar1.Maximum.ToString("#,##0;") + " records";
+            labelStatus.Text = "Processed " + clampedProgress.ToString("#,##0;") + " of " + progressBar1.Maximum.ToString("#,##0;") + " records";
             
             // Force the UI to refresh
             labelStatus.Refresh();
@@ -1175,45 +1178,49 @@ namespace SobekCM.Management_Tool.Importer.Forms
                     }
                     else
                     {
-                        // DIAGNOSTIC: Show the builder input folder that will be used
-                        string builderInputFolder = SobekCM.Engine_Library.ApplicationState.Engine_ApplicationCache_Gateway.Settings.Builder.Main_Builder_Input_Folder;
-                        string currentDb = MainForm.CurrentDatabaseServer;
-                        string connectionString = SobekCM.Engine_Library.Database.Engine_Database.Connection_String;
-                        
-                        // Extract just the server and database name from connection string for display
-                        string dbInfo = connectionString;
-                        try 
+                        // Only show confirmation dialog when logging is enabled
+                        if (LoggingWindow.LoggingEnabled)
                         {
-                            var parts = connectionString.Split(';');
-                            string server = "";
-                            string database = "";
-                            foreach (var part in parts)
+                            // DIAGNOSTIC: Show the builder input folder that will be used
+                            string builderInputFolder = SobekCM.Engine_Library.ApplicationState.Engine_ApplicationCache_Gateway.Settings.Builder.Main_Builder_Input_Folder;
+                            string currentDb = MainForm.CurrentDatabaseServer;
+                            string connectionString = SobekCM.Engine_Library.Database.Engine_Database.Connection_String;
+                            
+                            // Extract just the server and database name from connection string for display
+                            string dbInfo = connectionString;
+                            try 
                             {
-                                if (part.Trim().StartsWith("data source=", StringComparison.OrdinalIgnoreCase))
-                                    server = part.Trim().Substring(12);
-                                else if (part.Trim().StartsWith("initial catalog=", StringComparison.OrdinalIgnoreCase))
-                                    database = part.Trim().Substring(16);
+                                var parts = connectionString.Split(';');
+                                string server = "";
+                                string database = "";
+                                foreach (var part in parts)
+                                {
+                                    if (part.Trim().StartsWith("data source=", StringComparison.OrdinalIgnoreCase))
+                                        server = part.Trim().Substring(12);
+                                    else if (part.Trim().StartsWith("initial catalog=", StringComparison.OrdinalIgnoreCase))
+                                        database = part.Trim().Substring(16);
+                                }
+                                if (!string.IsNullOrEmpty(server) && !string.IsNullOrEmpty(database))
+                                    dbInfo = $"{server} / {database}";
                             }
-                            if (!string.IsNullOrEmpty(server) && !string.IsNullOrEmpty(database))
-                                dbInfo = $"{server} / {database}";
-                        }
-                        catch { }
+                            catch { }
 
-                        string diagnosticMessage = $"DIAGNOSTIC INFO - Please verify before proceeding:\n\n" +
-                            $"Current Database: {currentDb}\n" +
-                            $"DB Connection: {dbInfo}\n\n" +
-                            $"METS files will be written to:\n{builderInputFolder}\n\n" +
-                            $"Is this the correct inbound folder for the {currentDb} environment?\n\n" +
-                            $"Click YES to proceed with import, NO to cancel.";
+                            string diagnosticMessage = $"DIAGNOSTIC INFO - Please verify before proceeding:\n\n" +
+                                $"Current Database: {currentDb}\n" +
+                                $"DB Connection: {dbInfo}\n\n" +
+                                $"METS files will be written to:\n{builderInputFolder}\n\n" +
+                                $"Is this the correct inbound folder for the {currentDb} environment?\n\n" +
+                                $"Click YES to proceed with import, NO to cancel.";
 
-                        DialogResult result = MessageBox.Show(diagnosticMessage, "Confirm Builder Input Folder", 
-                            MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                        
-                        if (result == DialogResult.No)
-                        {
-                            this.executeButton.Button_Text = "EXECUTE";
-                            this.cancelButton.Button_Text = "EXIT";
-                            return;
+                            DialogResult result = MessageBox.Show(diagnosticMessage, "Confirm Builder Input Folder", 
+                                MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                            
+                            if (result == DialogResult.No)
+                            {
+                                this.executeButton.Button_Text = "EXECUTE";
+                                this.cancelButton.Button_Text = "EXIT";
+                                return;
+                            }
                         }
 
                         // Import Records                   
