@@ -63,9 +63,56 @@ namespace SobekCM.Management_Tool
 	        viewItemsLinkLabel.Text = "View " + Engine_ApplicationCache_Gateway.Settings.System.System_Abbreviation + " Items";
 	        reportingModuleLinkLabel.Text = Engine_ApplicationCache_Gateway.Settings.System.System_Abbreviation + " Reporting Module";
 
+            // Check for developer mode (specific users get auto-configured defaults)
+            ApplyDeveloperModeIfApplicable();
+
             // Set the window title with database server
             UpdateWindowTitle();
 	    }
+
+        /// <summary> Checks if the current user is a developer and applies default settings </summary>
+        private void ApplyDeveloperModeIfApplicable()
+        {
+            string currentUser = Environment.UserName.ToLower();
+            
+            // Developer mode for rbernardy
+            if (currentUser == "rbernardy")
+            {
+                // Auto-select Test database
+                liveDbMenuItem.Checked = false;
+                testDbMenuItem.Checked = true;
+                SwitchDatabase("test", "Test");
+
+                // Auto-enable logging
+                loggingOffMenuItem.Checked = false;
+                loggingOnMenuItem.Checked = true;
+                LoggingWindow.LoggingEnabled = true;
+                LoggingWindow.ShowWindow();
+                LoggingWindow.Log("Developer mode enabled for user: " + currentUser);
+            }
+        }
+
+        /// <summary> Gets the default retrieve URL for developer mode, or empty string if not in developer mode </summary>
+        public static string GetDeveloperRetrieveUrl()
+        {
+            string currentUser = Environment.UserName.ToLower();
+            if (currentUser == "rbernardy")
+            {
+                return "https://lib-builderdev.ad.ufl.edu/results/?t=bernardy,,,&f=ZZ,+TI,+AU,+TO";
+            }
+            return String.Empty;
+        }
+
+        /// <summary> Gets the default output folder for developer mode, or empty string if not in developer mode </summary>
+        public static string GetDeveloperOutputFolder()
+        {
+            string currentUser = Environment.UserName.ToLower();
+            if (currentUser == "rbernardy")
+            {
+                return @"C:\Users\rbernardy\OneDrive - University of Florida\Documents\SMaRT\Retrieve-items-form";
+            }
+            return String.Empty;
+        }
 
 	    public override sealed Color BackColor
 	    {

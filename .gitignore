@@ -159,3 +159,7 @@ $RECYCLE.BIN
 **/bin/
 
 .vscode/
+
+# Exclude .exe files from distribution and installer output
+SMaRT/dist/**/*.exe
+SMaRT/installer/Output/**/*.exe

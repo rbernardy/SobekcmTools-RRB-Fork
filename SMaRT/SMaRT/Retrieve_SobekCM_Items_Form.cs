@@ -47,6 +47,20 @@ namespace SobekCM.Management_Tool
             Text = "Retrieve " + Engine_ApplicationCache_Gateway.Settings.System.System_Abbreviation + " Items Form - (" + MainForm.CurrentDatabaseServer + ")";
             mainLabel.Text = "Retrieve " + Engine_ApplicationCache_Gateway.Settings.System.System_Abbreviation + " Items";
             queryLabel.Text = Engine_ApplicationCache_Gateway.Settings.System.System_Abbreviation + " Query:";
+
+            // Apply developer mode defaults if applicable
+            string devUrl = MainForm.GetDeveloperRetrieveUrl();
+            if (!String.IsNullOrEmpty(devUrl))
+            {
+                sobekcmQueryTextBox.Text = devUrl;
+            }
+
+            string devFolder = MainForm.GetDeveloperOutputFolder();
+            if (!String.IsNullOrEmpty(devFolder))
+            {
+                destinationTextBox.Text = devFolder;
+                folderBrowserDialog1.SelectedPath = devFolder;
+            }
         }
 
         public override sealed string Text
@@ -126,7 +140,7 @@ namespace SobekCM.Management_Tool
                 return;
             }
 
-            string sobekcm_url = sobekcmQueryTextBox.Text.Trim().ToLower();
+            string sobekcm_url = sobekcmQueryTextBox.Text.Trim();
             string destination = destinationTextBox.Text.Trim();
 
             sobekcmQueryTextBox.ReadOnly = true;
@@ -138,21 +152,39 @@ namespace SobekCM.Management_Tool
             okButton.Button_Enabled = false;
             exitButton.Button_Enabled = false;
 
+            // Handle URL transformation to XML endpoint
             sobekcm_url = sobekcm_url.Replace("/l/", "/xml/").Replace("/dataset/", "/xml/").Replace("/json/", "/xml/");
-            if (sobekcm_url.IndexOf("http://") < 0)
-                sobekcm_url = sobekcm_url + "http://";
-            if ( sobekcm_url.IndexOf("/xml/") < 0 )
+            
+            // Check if URL has a protocol, if not add http://
+            if (!sobekcm_url.StartsWith("http://", StringComparison.OrdinalIgnoreCase) && 
+                !sobekcm_url.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
             {
-                if (sobekcm_url.IndexOf(Engine_ApplicationCache_Gateway.Settings.Servers.System_Base_URL.ToLower()) == 0)
+                sobekcm_url = "http://" + sobekcm_url;
+            }
+            
+            // Insert /xml/ into the URL if not already present
+            if (sobekcm_url.IndexOf("/xml/", StringComparison.OrdinalIgnoreCase) < 0)
+            {
+                string systemBaseUrl = Engine_ApplicationCache_Gateway.Settings.Servers.System_Base_URL;
+                if (!String.IsNullOrEmpty(systemBaseUrl) && sobekcm_url.StartsWith(systemBaseUrl, StringComparison.OrdinalIgnoreCase))
                 {
-                    sobekcm_url = sobekcm_url.Replace(Engine_ApplicationCache_Gateway.Settings.Servers.System_Base_URL.ToLower(),
-                                                      Engine_ApplicationCache_Gateway.Settings.Servers.System_Base_URL.ToLower() + "xml/");
+                    sobekcm_url = systemBaseUrl.TrimEnd('/') + "/xml/" + sobekcm_url.Substring(systemBaseUrl.Length).TrimStart('/');
                 }
                 else
                 {
-                    // Hopefully this is at the root of the web server.. we can try to inset XML in there
-                    int index = sobekcm_url.IndexOf("/", 7);
-                    sobekcm_url = sobekcm_url.Substring(0, index) + "/xml/" + sobekcm_url.Substring(index + 1);
+                    // Use simple string manipulation to insert /xml/ after the host
+                    // This preserves the full hostname including all subdomains
+                    int protocolEnd = sobekcm_url.IndexOf("://") + 3;
+                    int firstSlash = sobekcm_url.IndexOf("/", protocolEnd);
+                    if (firstSlash > 0)
+                    {
+                        sobekcm_url = sobekcm_url.Substring(0, firstSlash) + "/xml" + sobekcm_url.Substring(firstSlash);
+                    }
+                    else
+                    {
+                        // No path, just append /xml/
+                        sobekcm_url = sobekcm_url + "/xml/";
+                    }
                 }
             }
 
@@ -160,7 +192,7 @@ namespace SobekCM.Management_Tool
 
             if (web_stream.Length == 0)
             {
-                MessageBox.Show("Invalid " + Engine_ApplicationCache_Gateway.Settings.System.System_Abbreviation + " Query URL was supplied.\n\nPerform requested search or browse directly in " + Engine_ApplicationCache_Gateway.Settings.System.System_Abbreviation + " and     \nthen copy the URL into the " + Engine_ApplicationCache_Gateway.Settings.System.System_Abbreviation + " query box.", "Invalid " + Engine_ApplicationCache_Gateway.Settings.System.System_Abbreviation + " Query Supplied", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Invalid " + Engine_ApplicationCache_Gateway.Settings.System.System_Abbreviation + " Query URL was supplied.\n\nPerform requested search or browse directly in " + Engine_ApplicationCache_Gateway.Settings.System.System_Abbreviation + " and     \nthen copy the URL into the " + Engine_ApplicationCache_Gateway.Settings.System.System_Abbreviation + " query box.\n\nTransformed URL: " + sobekcm_url, "Invalid " + Engine_ApplicationCache_Gateway.Settings.System.System_Abbreviation + " Query Supplied", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 sobekcmQueryTextBox.ReadOnly = false;
                 destinationTextBox.ReadOnly = false;
                 completeRadioButton.Enabled = true;
@@ -194,17 +226,32 @@ namespace SobekCM.Management_Tool
                 return;
             }
 
+            // Sanitize the system abbreviation for use in filename (remove invalid characters)
+            string safeAbbreviation = Engine_ApplicationCache_Gateway.Settings.System.System_Abbreviation.ToLower();
+            foreach (char c in Path.GetInvalidFileNameChars())
+            {
+                safeAbbreviation = safeAbbreviation.Replace(c.ToString(), "_");
+            }
+            string temp_file = temp_folder + "\\" + safeAbbreviation + "_download.xml";
+
             // Save the data to the temp folder
             try
             {
-                StreamWriter writer = new StreamWriter(temp_folder + "\\" + Engine_ApplicationCache_Gateway.Settings.System.System_Abbreviation.ToLower() + "_download.xml", false );
-                writer.Write( web_stream );
-                writer.Flush();
-                writer.Close();
+                // Delete the file first if it exists (in case it's locked from a previous failed attempt)
+                if (File.Exists(temp_file))
+                {
+                    try { File.Delete(temp_file); } catch { }
+                }
+
+                using (StreamWriter writer = new StreamWriter(temp_file, false))
+                {
+                    writer.Write(web_stream);
+                    writer.Flush();
+                }
             }
-            catch
+            catch (Exception ex)
             {
-                MessageBox.Show("Unable to save the downloaded data to the temporary folder:\n\n\t" + temp_folder + "\\" + Engine_ApplicationCache_Gateway.Settings.System.System_Abbreviation.ToLower() + "_download.xml", "Unable to create temporary file", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Unable to save the downloaded data to the temporary folder:\n\n\t" + temp_file + "\n\nError: " + ex.Message, "Unable to create temporary file", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 sobekcmQueryTextBox.ReadOnly = false;
                 destinationTextBox.ReadOnly = false;
                 completeRadioButton.Enabled = true;
@@ -220,11 +267,11 @@ namespace SobekCM.Management_Tool
             DataTable itemList = null;
             try
             {
-                itemList = Read_Item_Xml( temp_folder + "\\" + Engine_ApplicationCache_Gateway.Settings.System.System_Abbreviation.ToLower() + "_download.xml");
+                itemList = Read_Item_Xml(temp_file);
             }
-            catch
+            catch (Exception ex)
             {
-                MessageBox.Show("Unable to load the xml data into a dataset for processing.   ", "Processing Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Unable to load the xml data into a dataset for processing.\n\nFile: " + temp_file + "\n\nError: " + ex.Message + "\n\nStack: " + ex.StackTrace, "Processing Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 sobekcmQueryTextBox.ReadOnly = false;
                 destinationTextBox.ReadOnly = false;
                 completeRadioButton.Enabled = true;
@@ -304,6 +351,134 @@ namespace SobekCM.Management_Tool
             DataColumn webColumn = importItemsTable.Columns.Add("Web_Folder");
             DataColumn networkColumn = importItemsTable.Columns.Add("Network_Folder");
 
+            // Read the file content to determine format
+            string fileContent = File.ReadAllText(fileName);
+            
+            // Remove any BOM or leading whitespace/control characters
+            fileContent = fileContent.TrimStart('\uFEFF', '\u200B', ' ', '\t', '\r', '\n');
+
+            // Check if this contains the expected XML elements for the old format
+            // The old XML format specifically has <TitleResult> and <ItemResult> elements
+            // If it doesn't have these, treat it as text format (even if it starts with < like HTML)
+            bool isXmlFormat = fileContent.Contains("<TitleResult") || fileContent.Contains("<ItemResult");
+
+            if (isXmlFormat)
+            {
+                // Use the original XML parsing logic
+                Read_Item_Xml_Format(fileName, importItemsTable, titleIdColumn, itemIdColumn, titleColumn, dateColumn, urlColumn, webColumn, networkColumn);
+            }
+            else
+            {
+                // Use the new text-based parsing logic
+                // Strip any HTML tags if present
+                if (fileContent.Contains("<"))
+                {
+                    // Remove HTML tags - simple regex-free approach
+                    System.Text.StringBuilder sb = new System.Text.StringBuilder();
+                    bool inTag = false;
+                    foreach (char c in fileContent)
+                    {
+                        if (c == '<') inTag = true;
+                        else if (c == '>') inTag = false;
+                        else if (!inTag) sb.Append(c);
+                    }
+                    fileContent = sb.ToString();
+                }
+                Read_Item_Text_Format(fileContent, importItemsTable, titleIdColumn, itemIdColumn, titleColumn, dateColumn, urlColumn, webColumn, networkColumn);
+            }
+
+            return importItemsTable;
+        }
+
+        private void Read_Item_Text_Format(string fileContent, DataTable importItemsTable, DataColumn titleIdColumn, DataColumn itemIdColumn, DataColumn titleColumn, DataColumn dateColumn, DataColumn urlColumn, DataColumn webColumn, DataColumn networkColumn)
+        {
+            // The text format has 4 values per item:
+            // 1. URL (e.g., https://lib-builderdev.ad.ufl.edu/AA00039299/00006)
+            // 2. Web folder (e.g., https://lib-builderdev.ad.ufl.edu/content/AA/00/03/92/99/00006)
+            // 3. Network folder (e.g., C:\inetpub\wwwroot\content\AA\00\03\92\99\00006)
+            // 4. Date (e.g., 2016)
+
+            // Split by whitespace, but we need to be careful about paths with spaces
+            // The pattern is: URL starts with http, web folder starts with http, network folder starts with drive letter, date is last
+            string[] parts = fileContent.Split(new[] { ' ', '\t', '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
+
+            int i = 0;
+            while (i < parts.Length)
+            {
+                // Find the URL (starts with http)
+                if (!parts[i].StartsWith("http", StringComparison.OrdinalIgnoreCase))
+                {
+                    i++;
+                    continue;
+                }
+
+                string url = parts[i];
+                i++;
+
+                // Skip if we don't have enough parts left
+                if (i + 2 >= parts.Length) break;
+
+                // Next should be web folder (also starts with http)
+                string web = parts[i];
+                i++;
+
+                // Next should be network folder (starts with drive letter like C:\)
+                string network = parts[i];
+                i++;
+
+                // Next should be date
+                string date = parts[i];
+                i++;
+
+                // Extract title ID and item ID from the URL
+                // URL format: https://lib-builderdev.ad.ufl.edu/AA00039299/00006
+                string titleId = String.Empty;
+                string itemId = String.Empty;
+
+                try
+                {
+                    Uri uri = new Uri(url);
+                    string[] pathParts = uri.AbsolutePath.Trim('/').Split('/');
+                    if (pathParts.Length >= 2)
+                    {
+                        titleId = pathParts[0];
+                        itemId = pathParts[1];
+                    }
+                    else if (pathParts.Length == 1)
+                    {
+                        titleId = pathParts[0];
+                    }
+                }
+                catch
+                {
+                    // If URL parsing fails, try simple string parsing
+                    int lastSlash = url.LastIndexOf('/');
+                    if (lastSlash > 0)
+                    {
+                        itemId = url.Substring(lastSlash + 1);
+                        int secondLastSlash = url.LastIndexOf('/', lastSlash - 1);
+                        if (secondLastSlash > 0)
+                        {
+                            titleId = url.Substring(secondLastSlash + 1, lastSlash - secondLastSlash - 1);
+                        }
+                    }
+                }
+
+                // Create the new row and assign all the values
+                DataRow newRow = importItemsTable.NewRow();
+                newRow[titleIdColumn] = titleId;
+                newRow[itemIdColumn] = itemId;
+                newRow[titleColumn] = String.Empty; // Title not provided in text format
+                newRow[dateColumn] = date;
+                newRow[urlColumn] = url;
+                newRow[webColumn] = web;
+                newRow[networkColumn] = network;
+                importItemsTable.Rows.Add(newRow);
+            }
+        }
+
+        private void Read_Item_Xml_Format(string fileName, DataTable importItemsTable, DataColumn titleIdColumn, DataColumn itemIdColumn, DataColumn titleColumn, DataColumn dateColumn, DataColumn urlColumn, DataColumn webColumn, DataColumn networkColumn)
+        {
             // Create the temporary values here
             string titleId = String.Empty;
             string itemId = String.Empty;
@@ -313,95 +488,107 @@ namespace SobekCM.Management_Tool
             string web = String.Empty;
             string network = String.Empty;
 
-            // Open a connection to the XML file and step through the XML
-            XmlTextReader reader = new XmlTextReader(new StreamReader(fileName));
-            while (reader.Read())
+            // Read the file content and remove any invalid control characters
+            string xmlContent = File.ReadAllText(fileName);
+            // Remove control characters that are invalid in XML (0x00-0x1F except tab, newline, carriage return)
+            System.Text.StringBuilder cleanContent = new System.Text.StringBuilder();
+            foreach (char c in xmlContent)
             {
-                // What type of XML node is this?
-                if (reader.NodeType == XmlNodeType.Element)
+                if (c == '\t' || c == '\n' || c == '\r' || c >= 0x20)
                 {
-                    switch (reader.Name)
-                    {
-                        case "ItemResult":
-                            if (reader.MoveToAttribute("ID"))
-                                itemId = reader.Value;
-                            break;
-
-                        case "Title":
-                            reader.Read();
-                            title = reader.Value;
-                            break;
-
-                        case "Date":
-                            reader.Read();
-                            date = reader.Value;
-                            break;
-
-                        case "URL":
-                            reader.Read();
-                            url = reader.Value;
-                            break;
-
-                        case "Folder":
-                            if (reader.MoveToAttribute("type"))
-                            {
-                                if (reader.Value == "web")
-                                {
-                                    reader.Read();
-                                    web = reader.Value;
-                                }
-                                else if (reader.Value == "network")
-                                {
-                                    reader.Read();
-                                    network = reader.Value;
-                                }
-                            }
-                            break;
-
-                        case "TitleResult":
-                            if (reader.MoveToAttribute("ID"))
-                                titleId = reader.Value;
-                            break;
-                    }
+                    cleanContent.Append(c);
                 }
-                else if (reader.NodeType == XmlNodeType.EndElement)
+            }
+
+            // Parse the cleaned XML content
+            using (StringReader stringReader = new StringReader(cleanContent.ToString()))
+            using (XmlTextReader reader = new XmlTextReader(stringReader))
+            {
+                while (reader.Read())
                 {
-                    // Is this ending the title or an item within the title?
-                    switch (reader.Name)
+                    // What type of XML node is this?
+                    if (reader.NodeType == XmlNodeType.Element)
                     {
-                        case "ItemResult":
-                            // Create the new row and assign all the values
-                            DataRow newRow = importItemsTable.NewRow();
-                            newRow[titleIdColumn] = titleId;
-                            newRow[itemIdColumn] = itemId;
-                            newRow[titleColumn] = title;
-                            newRow[dateColumn] = date;
-                            newRow[urlColumn] = url;
-                            newRow[webColumn] = web;
-                            newRow[networkColumn] = network;
-                            importItemsTable.Rows.Add(newRow);
+                        switch (reader.Name)
+                        {
+                            case "ItemResult":
+                                if (reader.MoveToAttribute("ID"))
+                                    itemId = reader.Value;
+                                break;
 
-                            // Now, clear out all the item-level data
-                            itemId = String.Empty;
-                            title = String.Empty;
-                            date = String.Empty;
-                            url = String.Empty;
-                            web = String.Empty;
-                            network = String.Empty;
-                            break;
+                            case "Title":
+                                reader.Read();
+                                title = reader.Value;
+                                break;
+
+                            case "Date":
+                                reader.Read();
+                                date = reader.Value;
+                                break;
+
+                            case "URL":
+                                reader.Read();
+                                url = reader.Value;
+                                break;
+
+                            case "Folder":
+                                if (reader.MoveToAttribute("type"))
+                                {
+                                    if (reader.Value == "web")
+                                    {
+                                        reader.Read();
+                                        web = reader.Value;
+                                    }
+                                    else if (reader.Value == "network")
+                                    {
+                                        reader.Read();
+                                        network = reader.Value;
+                                    }
+                                }
+                                break;
+
+                            case "TitleResult":
+                                if (reader.MoveToAttribute("ID"))
+                                    titleId = reader.Value;
+                                break;
+                        }
+                    }
+                    else if (reader.NodeType == XmlNodeType.EndElement)
+                    {
+                        // Is this ending the title or an item within the title?
+                        switch (reader.Name)
+                        {
+                            case "ItemResult":
+                                // Create the new row and assign all the values
+                                DataRow newRow = importItemsTable.NewRow();
+                                newRow[titleIdColumn] = titleId;
+                                newRow[itemIdColumn] = itemId;
+                                newRow[titleColumn] = title;
+                                newRow[dateColumn] = date;
+                                newRow[urlColumn] = url;
+                                newRow[webColumn] = web;
+                                newRow[networkColumn] = network;
+                                importItemsTable.Rows.Add(newRow);
+
+                                // Now, clear out all the item-level data
+                                itemId = String.Empty;
+                                title = String.Empty;
+                                date = String.Empty;
+                                url = String.Empty;
+                                web = String.Empty;
+                                network = String.Empty;
+                                break;
 
 
-                        case "TitleResult":
-                            // Clear out the last title bit of information
-                            titleId = String.Empty;
-                            break;
+                            case "TitleResult":
+                                // Clear out the last title bit of information
+                                titleId = String.Empty;
+                                break;
 
+                        }
                     }
                 }
             }
-            reader.Close();
-
-            return importItemsTable;
         }
 
 
@@ -414,16 +601,25 @@ namespace SobekCM.Management_Tool
             }
         }
 
-        void processor_Progress_Complete( int errorCount )
+        void processor_Progress_Complete( int successCount, int missingMetsCount, int errorCount )
         {
-            // Show message
+            // Build informative completion message
+            string message = "Process complete.\n\n";
+            message += "Downloaded: " + successCount + " items\n";
+            
+            if (missingMetsCount > 0)
+            {
+                message += "No METS file available: " + missingMetsCount + " items\n";
+            }
+            
             if (errorCount > 0)
             {
-                MessageBox.Show("Process complete with " + errorCount + " errors.   ");
+                message += "Errors: " + errorCount + " items";
+                MessageBox.Show(message, "Complete with Errors", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
             else
             {
-                MessageBox.Show("Process complete with no errors.   ");
+                MessageBox.Show(message.TrimEnd(), "Process Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
 
             // Show this folder
@@ -443,6 +639,9 @@ namespace SobekCM.Management_Tool
         {
             try
             {
+                // Enable TLS 1.2 for HTTPS connections (required for modern servers)
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
+
                 // the html retrieved from the page
                 WebRequest objRequest = WebRequest.Create(strURL);
                 WebResponse objResponse = objRequest.GetResponse();
