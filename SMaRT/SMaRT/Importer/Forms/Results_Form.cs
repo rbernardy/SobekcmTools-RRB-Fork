@@ -174,6 +174,11 @@ namespace SobekCM.Management_Tool.Importer.Forms
             if (preview_mode)
             {
                 this.Text = this.Text + " (PREVIEW ONLY!)";
+                // Adjust the form to be 25 pixels shorter in height and move it 25 pixels down
+                // Reduce the height
+                this.Height = this.Height - 25;
+                // Move the top position down by 25 pixels
+                this.Top = this.Top + 25;
             }
                        
 			// Set the default print as landscape

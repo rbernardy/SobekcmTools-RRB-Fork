@@ -14,6 +14,7 @@ using System.Collections.Specialized;
 using System.Text.RegularExpressions;
 using SobekCM.Resource_Object;
 using GemBox.Spreadsheet;
+using SobekCM.Management_Tool.Versioning;
 
 namespace SobekCM.Management_Tool.Importer.Forms
 {
@@ -299,67 +300,61 @@ namespace SobekCM.Management_Tool.Importer.Forms
 
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
+                // Set form controls to default state   
+                ResetFormControls();
 
-                ExcelBibliographicReader read = new ExcelBibliographicReader();
-                List<string> tables;
+                // Write the filename to the text box first
+                this.fileTextBox.Text = openFileDialog1.FileName;
+                this.filename = openFileDialog1.FileName;
 
-                try
+                // Load worksheet names on a background thread to avoid UI freeze
+                ThreadPool.QueueUserWorkItem(_ =>
                 {
-                    // Set form controls to default state   
-                    ResetFormControls();
-
-                    // Write the filename to the text box first
-                    this.fileTextBox.Text = openFileDialog1.FileName;
-                    this.filename = openFileDialog1.FileName;
-
-
-                    // Try getting the worksheet names from the selected workbook
-                    bool readFlag = true;
-
-                    while (readFlag)
+                    ExcelBibliographicReader read = null;
+                    List<string> tables = null;
+                    try
                     {
-
-                        try
-                        {
-
-                            // Get the sheet names
-                            read = new ExcelBibliographicReader();
-                            tables = read.GetExcelSheetNames(openFileDialog1.FileName);
-
-
-                            if (tables == null)
-                            {
-                                ResetFormControls();
-                                return;
-                            }
-                            else
-                            {
-                                readFlag = false;
-                               
-                                // Populate the combo box
-                                this.sheetComboBox.Enabled = true;
-                                foreach (string thisSheetName in tables)
-                                    this.sheetComboBox.Items.Add(thisSheetName);
-
-                                // show step 2 instructions
-                                show_step_2();
-                            }
-                        }
-                        catch (Exception ex)
+                        read = new ExcelBibliographicReader();
+                        tables = read.GetExcelSheetNames(openFileDialog1.FileName);
+                    }
+                    catch (Exception ex)
+                    {
+                        // Capture any error and report on UI thread
+                        this.Invoke((MethodInvoker)delegate
                         {
                             DLC.Tools.Forms.ErrorMessageBox.Show(ex.Message, "Unexpected Error", ex);
+                        });
+                    }
+                    finally
+                    {
+                        // Ensure the reader is closed
+                        if (read != null)
+                        {
+                            try { read.Close(); } catch { }
                         }
                     }
-                }
-                catch (Exception ex)
-                {
-                    DLC.Tools.Forms.ErrorMessageBox.Show(ex.Message, "Unexpected Error", ex);
-                }
-                finally
-                {
-                    // Close the reader
-                    read.Close();
-                }
+
+                    // Update UI with the results
+                    this.Invoke((MethodInvoker)delegate
+                    {
+                        if (tables == null || tables.Count == 0)
+                        {
+                            // No sheets found – reset the form to initial state
+                            ResetFormControls();
+                        }
+                        else
+                        {
+                            // Populate the combo box
+                            this.sheetComboBox.Enabled = true;
+                            this.sheetComboBox.Items.Clear();
+                            foreach (string thisSheetName in tables)
+                                this.sheetComboBox.Items.Add(thisSheetName);
+
+                            // show step 2 instructions
+                            show_step_2();
+                        }
+                    });
+                });
             }
             else
             {
@@ -1205,12 +1200,13 @@ namespace SobekCM.Management_Tool.Importer.Forms
                             }
                             catch { }
 
-                            string diagnosticMessage = $"DIAGNOSTIC INFO - Please verify before proceeding:\n\n" +
-                                $"Current Database: {currentDb}\n" +
-                                $"DB Connection: {dbInfo}\n\n" +
-                                $"METS files will be written to:\n{builderInputFolder}\n\n" +
-                                $"Is this the correct inbound folder for the {currentDb} environment?\n\n" +
-                                $"Click YES to proceed with import, NO to cancel.";
+                             string diagnosticMessage = $"DIAGNOSTIC INFO - Please verify before proceeding:\n\n" +
+                                 $"Current Database: {currentDb}\n" +
+                                 $"DB Connection: {dbInfo}\n" +
+                                 $"Product Version: {VersionConfigSettings.AppVersion}\n\n" +
+                                 $"METS files will be written to:\n{builderInputFolder}\n\n" +
+                                 $"Is this the correct inbound folder for the {currentDb} environment?\n\n" +
+                                 $"Click YES to proceed with import, NO to cancel.";
 
                             DialogResult result = MessageBox.Show(diagnosticMessage, "Confirm Builder Input Folder", 
                                 MessageBoxButtons.YesNo, MessageBoxIcon.Question);

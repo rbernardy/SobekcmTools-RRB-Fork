@@ -25,6 +25,13 @@ namespace SobekCM.Management_Tool
         public LoggingWindow()
         {
             InitializeComponent();
+            // Position the logging window near the right edge of the primary screen, 25px from the right border
+            this.StartPosition = FormStartPosition.Manual;
+            // Calculate the X coordinate: screen width minus window width minus 25 pixels
+            int x = Screen.PrimaryScreen.WorkingArea.Width - this.Width - 25;
+            // Position the window 100 pixels from the top of the screen
+            int y = 100;
+            this.Location = new Point(x, y);
         }
 
         private void InitializeComponent()
@@ -89,7 +96,7 @@ namespace SobekCM.Management_Tool
             this.Controls.Add(this.logTextBox);
             this.MinimumSize = new Size(400, 300);
             this.Name = "LoggingWindow";
-            this.StartPosition = FormStartPosition.CenterScreen;
+            // Position the logging window near the right edge of the primary screen, 100px from the right border
             this.Text = "SMaRT Logging Window";
             this.FormClosing += new FormClosingEventHandler(this.LoggingWindow_FormClosing);
             this.ResumeLayout(false);

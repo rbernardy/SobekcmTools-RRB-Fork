@@ -88,6 +88,7 @@ namespace SobekCM.Management_Tool
                 loggingOnMenuItem.Checked = true;
                 LoggingWindow.LoggingEnabled = true;
                 LoggingWindow.ShowWindow();
+				LoggingWindow.Log("Product version=" + VersionConfigSettings.AppVersion);
                 LoggingWindow.Log("Developer mode enabled for user: " + currentUser);
             }
         }
@@ -489,10 +490,13 @@ namespace SobekCM.Management_Tool
                 writer.Flush();
                 writer.Close();
 
+				LoggingWindow.Log("Going to try to delete [" + testfile + "].");
                 File.Delete(testfile);
+				LoggingWindow.Log("testfile successfully deleted.");
             }
             catch ( Exception ee )
             {
+				LoggingWindow.Log("\"You must have write/modify rights on the 'Main Builder Input Folder' in order to import records.\\n\\n" + dropbox);
                 MessageBox.Show(
                     "You must have write/modify rights on the 'Main Builder Input Folder' in order to import records.\n\n" + dropbox,
                     "System-wide Setting Invalid", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -578,7 +582,12 @@ namespace SobekCM.Management_Tool
                 // Update this window's title
                 UpdateWindowTitle();
 
-                MessageBox.Show($"Successfully switched to {displayName} database.", "Database Changed", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                // Log the successful database switch and include the product version for traceability
+                 // Include the current Windows user name in the log for traceability
+                 string currentUser = Environment.UserName;
+                 LoggingWindow.Log($"Successfully switched to [{displayName}]. Product version: {VersionConfigSettings.AppVersion}. User: {currentUser}");
+                // Show a message box with the same information for the user
+                MessageBox.Show($"Successfully switched to {displayName} database. Product version: {VersionConfigSettings.AppVersion}" + ". User: " + currentUser + ".", "Database Changed", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
             {
