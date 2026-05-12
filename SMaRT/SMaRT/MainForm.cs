@@ -63,8 +63,19 @@ namespace SobekCM.Management_Tool
 	        viewItemsLinkLabel.Text = "View " + Engine_ApplicationCache_Gateway.Settings.System.System_Abbreviation + " Items";
 	        reportingModuleLinkLabel.Text = Engine_ApplicationCache_Gateway.Settings.System.System_Abbreviation + " Reporting Module";
 
-            // Check for developer mode (specific users get auto-configured defaults)
-            ApplyDeveloperModeIfApplicable();
+            // Check for developer mode via environment variable "developermode"
+            // If the variable is set to "on" (case-insensitive), apply developer mode settings.
+            // Log the decision using LoggingWindow.
+            string devModeEnv = Environment.GetEnvironmentVariable("developermode");
+            if (!string.IsNullOrEmpty(devModeEnv) && devModeEnv.Equals("on", StringComparison.OrdinalIgnoreCase))
+            {
+                LoggingWindow.Log("Developer mode environment variable set to 'on'. Applying developer mode.");
+                ApplyDeveloperModeIfApplicable();
+            }
+            else
+            {
+                LoggingWindow.Log("Developer mode environment variable not set to 'on'. Skipping ApplyDeveloperModeIfApplicable.");
+            }
 
             // Set the window title with database server
             UpdateWindowTitle();

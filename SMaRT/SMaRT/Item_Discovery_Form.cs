@@ -522,6 +522,22 @@ namespace SobekCM.Management_Tool
             SMaRT_UserSettings.Discovery_Panel_Search_Term4 = lastSearch.Fourth_Term;
             SMaRT_UserSettings.Save();
 
+            // If logging is enabled, display a confirmation dialog with diagnostic info before executing the search
+            if (LoggingWindow.LoggingEnabled)
+            {
+                // Retrieve the main builder input folder path for diagnostic purposes
+                string builderInputFolder = Engine_ApplicationCache_Gateway.Settings.Builder.Main_Builder_Input_Folder;
+                string info = $"Product version: {VersionConfigSettings.AppVersion}\n" +
+                              $"SQL connection: {Engine_Database.Connection_String}\n" +
+                              $"Mode: {MainForm.CurrentDatabaseServer}\n" +
+                              $"Main Builder Input Folder: {builderInputFolder}";
+                var dlgResult = MessageBox.Show(info + "\n\nProceed with search?", "Confirm Search", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (dlgResult != DialogResult.Yes)
+                {
+                    // User chose not to proceed; abort the search and return to the form
+                    return;
+                }
+            }
             Cursor = Cursors.WaitCursor;
             DataSet resultSet = lastSearch.Perform_Tracking_Search();
             Cursor = Cursors.Default;

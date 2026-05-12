@@ -163,3 +163,24 @@ $RECYCLE.BIN
 # Exclude .exe files from distribution and installer output
 SMaRT/dist/**/*.exe
 SMaRT/installer/Output/**/*.exe
+
+# Windows system files
+Thumbs.db
+desktop.ini
+
+# IDE/Editor folders
+.vscode/
+.idea/
+*.suo
+*.user
+
+# Build outputs and dependencies
+bin/
+obj/
+node_modules/
+__pycache__/
+*.exe
+*.dll
+!SMaRT/DLLs/**
+# Ensure bin folders inside SMaRT/DLLs are still ignored
+SMaRT/DLLs/**/bin/
