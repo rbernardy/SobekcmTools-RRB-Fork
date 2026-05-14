@@ -269,6 +269,13 @@ namespace SobekCM.Management_Tool.Reports
 
         private void linkLabel4_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
+            // Confirmation before opening the report
+            DialogResult confirm = MessageBox.Show(
+                "You are about to open the 'Newspapers without Serial Info' report.\n\nDo you want to continue?",
+                "Confirm Report", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (confirm != DialogResult.Yes)
+                return;
+
             try
             {
                 Groups_Needed_Serial_Hierarchy_Form showForm = new Groups_Needed_Serial_Hierarchy_Form();
@@ -285,6 +292,13 @@ namespace SobekCM.Management_Tool.Reports
 
         private void aggregationSpaceUsedLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
+            // Confirmation before opening the report
+            DialogResult confirm = MessageBox.Show(
+                "You are about to open the 'Aggregation Space Utilized' report.\n\nDo you want to continue?",
+                "Confirm Report", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (confirm != DialogResult.Yes)
+                return;
+
             Aggregation_Space_Used_Form showForm = new Aggregation_Space_Used_Form();
             Hide();
             showForm.ShowDialog();
@@ -293,6 +307,13 @@ namespace SobekCM.Management_Tool.Reports
 
         private void customReportLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
+            // Confirmation before opening the report
+            DialogResult confirm = MessageBox.Show(
+                "You are about to open the 'Ad Hoc Report Generator'.\n\nDo you want to continue?",
+                "Confirm Report", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (confirm != DialogResult.Yes)
+                return;
+
             Ad_Hoc_Reporting_Query_Form showForm = new Ad_Hoc_Reporting_Query_Form();
             Hide();
             showForm.ShowDialog();
@@ -301,6 +322,13 @@ namespace SobekCM.Management_Tool.Reports
 
         private void pendingOnlineActivationLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
+            // Confirmation before opening the report
+            DialogResult confirm = MessageBox.Show(
+                "You are about to open the 'Pending Online Complete' report.\n\nDo you want to continue?",
+                "Confirm Report", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (confirm != DialogResult.Yes)
+                return;
+
             Items_Pending_Online_Complete_Form showForm = new Items_Pending_Online_Complete_Form();
             Hide();
             showForm.ShowDialog();
@@ -309,6 +337,13 @@ namespace SobekCM.Management_Tool.Reports
 
         private void trackingBoxLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
+            // Confirmation before opening the report
+            DialogResult confirm = MessageBox.Show(
+                "You are about to open the 'Tracking Boxes Report'.\n\nDo you want to continue?",
+                "Confirm Report", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (confirm != DialogResult.Yes)
+                return;
+
             Tracking_Boxes_Report_Form showForm = new Tracking_Boxes_Report_Form();
             Hide();
             showForm.ShowDialog();
