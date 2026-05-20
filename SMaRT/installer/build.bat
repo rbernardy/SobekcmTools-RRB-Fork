@@ -56,17 +56,17 @@ echo.
 echo Step 3: Copying installer to distribution folder...
 echo ----------------------------------------------------------------------------
 if not exist "!DIST_DIR!" mkdir "!DIST_DIR!"
-copy "!OUTPUT_DIR!\UFDC_SMART_Setup_3.52.8.exe" "!DIST_DIR!\" >nul
+copy "!OUTPUT_DIR!\UFDC-SMART-PerUser-3.52.9.exe" "!DIST_DIR!\" >nul
 if errorlevel 1 (
     echo WARNING: Failed to copy installer to distribution folder
 ) else (
-    echo Installer copied to: !DIST_DIR!\UFDC_SMART_Setup_3.52.8.exe
+    echo Installer copied to: !DIST_DIR!\UFDC-SMART-PerUser-3.52.9.exe
 )
 echo.
 
 echo ============================================================================
 echo Build completed successfully!
-echo Installer location: !OUTPUT_DIR!\UFDC_SMART_Setup_3.52.8.exe
+echo Installer location: !OUTPUT_DIR!\UFDC-SMART-PerUser-3.52.9.exe
 echo ============================================================================
 
 endlocal

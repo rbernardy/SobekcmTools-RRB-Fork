@@ -8,7 +8,7 @@ AppId={{A7F3B8C2-4D5E-4A1B-9C3D-8E7F6A5B4C3D}}
 
 ; Application information displayed in installer and Programs & Features
 AppName=UFDC SMaRT Per-User
-AppVersion=3.52.8
+AppVersion=3.52.9
 AppPublisher=University of Florida Digital Collections
 AppPublisherURL=http://ufdc.ufl.edu
 AppSupportURL=http://ufdc.ufl.edu
@@ -25,7 +25,7 @@ DisableProgramGroupPage=no
 
 ; Output configuration
 OutputDir=Output
-OutputBaseFilename=UFDC_SMART_Setup_3.52.8
+OutputBaseFilename=UFDC-SMART-PerUser-3.52.9
 
 ; Compression settings - LZMA2 with maximum compression for smallest installer size
 ; SolidCompression compresses all files together for better compression ratio
@@ -48,7 +48,7 @@ UninstallDisplayName=UFDC SMaRT Per-User
 UninstallDisplayIcon={app}\SMaRT.exe
 
 ; Version information displayed in Programs & Features
-VersionInfoVersion=3.52.8
+VersionInfoVersion=3.52.9
 VersionInfoCompany=University of Florida Digital Collections
 VersionInfoDescription=SobekCM Management Tool
 VersionInfoCopyright=Copyright (c) University of Florida

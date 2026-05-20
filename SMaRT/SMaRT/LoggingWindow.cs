@@ -19,7 +19,30 @@ namespace SobekCM.Management_Tool
         private Button closeButton;
 
         /// <summary> Gets or sets whether logging is enabled </summary>
-        public static bool LoggingEnabled { get; set; } = false;
+        // Production version constant (updated to the current version)
+        private static readonly string ProductionVersion = "3.52.9";
+
+        // Backing field for the LoggingEnabled property. Default is false so logging is off until the user enables it.
+        private static bool _loggingEnabled = false;
+
+        /// <summary>Gets or sets whether logging is enabled. When turned on, the production version is logged as the first entry.</summary>
+        public static bool LoggingEnabled
+        {
+            get => _loggingEnabled;
+            set
+            {
+                // Only act when the value actually changes
+                if (_loggingEnabled != value)
+                {
+                    _loggingEnabled = value;
+                    // If logging is being enabled, emit a log entry with the production version.
+                    if (value)
+                    {
+                        Log($"Production version: {ProductionVersion}");
+                    }
+                }
+            }
+        }
 
         /// <summary> Constructor for a new instance of the LoggingWindow class </summary>
         public LoggingWindow()
@@ -53,7 +76,8 @@ namespace SobekCM.Management_Tool
             this.logTextBox.Size = new Size(560, 338);
             this.logTextBox.TabIndex = 0;
             this.logTextBox.Text = "";
-            this.logTextBox.WordWrap = false;
+            // Enable word wrap so log entries automatically break to fit the current width of the popup window
+            this.logTextBox.WordWrap = true;
             this.logTextBox.HideSelection = false; // Keep selection visible when control loses focus
 
             // copyAllButton

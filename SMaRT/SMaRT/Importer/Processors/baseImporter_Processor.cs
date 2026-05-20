@@ -344,73 +344,72 @@ namespace SobekCM.Management_Tool.Importer
 
                             return false;
                         }
+                        // break is unreachable due to returns, but kept for syntax clarity
+                        break;
 
-                    
-                    break;
 
-                case Matching_Record_Choice_Enum.Create_New_Record:
-                    // add new bib record
-                    add_to_database(bibPackage, importer_bib_source, preview_mode, false );
-
-                    if (this.errors.Count == 0)
+                case Matching_Record_Choice_Enum.Skip:
+                    // stop processing this record and continue to the next record
+                    // Provide more detailed information about why the record was skipped.
+                    if (errors.Count == 0)
                     {
-                        if (preview_mode)
+                        // Base message
+                        item_import_comments = "Record skipped.";
+
+                        // Determine specific reason
+                        if (!string.IsNullOrEmpty(bibPackage?.BibID) && bibPackage.BibID.StartsWith("(") && bibPackage.BibID.EndsWith(")"))
                         {
-                            item_import_comments += "New record would have been created. " + Tracking_Warnings;
+                            // Duplicate record detected
+                            string dupId = bibPackage.BibID.Trim('(', ')');
+                            item_import_comments += " Duplicate BibID: " + dupId + ".";
+                            // Include the matching message for context if available
+                            if (!string.IsNullOrEmpty(message))
+                            {
+                                item_import_comments += " Details: " + message;
+                            }
+                        }
+                        else if (matching_record_dialog_form_selected_value == Matching_Record_Choice_Enum.Skip)
+                        {
+                            // User explicitly chose to skip this record
+                            item_import_comments += " User chose to skip this record.";
+                            // Include the matching message that was presented to the user for context
+                            if (!string.IsNullOrEmpty(message))
+                            {
+                                item_import_comments += " Details: " + message;
+                            }
                         }
                         else
                         {
-                            item_import_comments += "New record created. " + Tracking_Warnings;
+                            // General skip (no match found)
+                            item_import_comments += " No matching record found.";
+                            if (!string.IsNullOrEmpty(message))
+                            {
+                                item_import_comments += " Details: " + message;
+                            }
                         }
-                        report.Add_Item(bibPackage, related_file, item_import_comments.Trim());
+
+                        // Append any warning messages that were collected during processing.
+                        if (Tracking_Warnings.Length > 0)
+                        {
+                            item_import_comments += " " + Tracking_Warnings;
+                        }
 
                         if (currentRow != null)
                         {
                             currentRow["Messages"] = item_import_comments;
-                            currentRow["New Bib ID"] = bibPackage.BibID;
-                            currentRow["New VID ID"] = bibPackage.VID;
                         }
-
-                        return true;
                     }
                     else
                     {
+                        // There were errors; use the aggregated error message.
                         item_import_comments = Error_Message;
-                        report.Add_Item(bibPackage, related_file, item_import_comments.Trim());
-
-                        if (currentRow != null)
-                        {
-                            currentRow["Messages"] = Error_Message;
-                            bibPackage.VID = String.Empty;
-                            bibPackage.BibID = String.Empty;
-                        }
-
-                        return false;
-                    }
-                    break;
-
-                case Matching_Record_Choice_Enum.Skip:
-                    // stop processing this record and continue to the next record
-                    if (errors.Count == 0)
-                    {
-                            item_import_comments += " Record skipped.";
-
-                            if (currentRow != null)
-                            {
-                                currentRow["Messages"] = "Record skipped.";
-                            }
-                    }
-                    else
-                    {
-                        item_import_comments = Error_Message;
-
                         if (currentRow != null)
                         {
                             currentRow["Messages"] = Error_Message;
                         }
                     }
 
-                    // Add this to the result table being built
+                    // Add this to the result table being built with the enriched comment.
                     report.Add_Item(bibPackage, related_file, item_import_comments.Trim());
                     recordsProcessed++;
                     recordsSkipped++;

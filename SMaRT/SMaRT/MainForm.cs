@@ -46,6 +46,10 @@ namespace SobekCM.Management_Tool
         // Static property to track current database server
         public static string CurrentDatabaseServer { get; set; } = "Live";
 
+        // Static property to hold the refreshed Main Builder Input Folder path after a DB switch
+        // This ensures the folder path is up‑to‑date and not cached from application start.
+        public static string CurrentBuilderInputFolder { get; private set; } = string.Empty;
+
 	    #region Constructor
 
 	    /// <summary> Constructor for a new instance of the MainForm class </summary>
@@ -79,6 +83,9 @@ namespace SobekCM.Management_Tool
 
             // Set the window title with database server
             UpdateWindowTitle();
+
+            // Initialise the cached builder input folder for the current session
+            CurrentBuilderInputFolder = Engine_ApplicationCache_Gateway.Settings.Builder.Main_Builder_Input_Folder;
 	    }
 
         /// <summary> Checks if the current user is a developer and applies default settings </summary>
@@ -482,8 +489,8 @@ namespace SobekCM.Management_Tool
         private void importRecordsLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             // Must have a value (and be valid with write access) to the main builder folder
-            // to be able to import things
-            string dropbox = Engine_ApplicationCache_Gateway.Settings.Builder.Main_Builder_Input_Folder;
+            // to be able to import things. Use the cached folder path which is refreshed on DB switch.
+            string dropbox = MainForm.CurrentBuilderInputFolder;
             if (( String.IsNullOrEmpty(dropbox)) || ( !Directory.Exists(dropbox)))
             {
                 MessageBox.Show(
@@ -586,6 +593,29 @@ namespace SobekCM.Management_Tool
 
                 // Reload the settings from the new database
                 Engine_ApplicationCache_Gateway.RefreshSettings();
+
+                // Update the cached builder input folder after the settings refresh
+                try
+                {
+                    CurrentBuilderInputFolder = Engine_ApplicationCache_Gateway.Settings.Builder.Main_Builder_Input_Folder;
+                    LoggingWindow.Log($"[SwitchDatabase] Updated Main Builder Input Folder: {CurrentBuilderInputFolder}");
+                }
+                catch (Exception ex)
+                {
+                    LoggingWindow.Log($"[SwitchDatabase] Failed to retrieve Main Builder Input Folder: {ex.Message}");
+                }
+
+            // Log the Main Builder Input Folder after settings refresh
+            try
+            {
+                // Use the refreshed folder path cached in MainForm.CurrentBuilderInputFolder
+                string dropbox = MainForm.CurrentBuilderInputFolder;
+                LoggingWindow.Log($"Main Builder Input Folder set to: {dropbox}");
+            }
+            catch (Exception ex)
+            {
+                LoggingWindow.Log($"Failed to retrieve Main Builder Input Folder after server change: {ex.Message}");
+            }
 
                 // Update the current database server
                 CurrentDatabaseServer = displayName;

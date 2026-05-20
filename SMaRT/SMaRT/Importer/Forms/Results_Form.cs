@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using System.Diagnostics;
 using DLC.Custom_Grid;
 using SobekCM.Resource_Object;
+using SobekCM.Management_Tool.Versioning;
 
 
 namespace SobekCM.Management_Tool.Importer.Forms
@@ -170,6 +171,9 @@ namespace SobekCM.Management_Tool.Importer.Forms
                         this.Text = "SpreadSheet Importer - Results Form";
                     break;
             }
+
+            // Append product version and current mode (Live/Test) to the form title
+            this.Text = $"{this.Text} (Version {VersionConfigSettings.AppVersion}, {MainForm.CurrentDatabaseServer})";
 
             if (preview_mode)
             {
