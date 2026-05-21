@@ -1177,36 +1177,35 @@ namespace SobekCM.Management_Tool.Importer.Forms
                         if (LoggingWindow.LoggingEnabled)
                         {
                             // DIAGNOSTIC: Show the builder input folder that will be used
-                            string builderInputFolder = SobekCM.Engine_Library.ApplicationState.Engine_ApplicationCache_Gateway.Settings.Builder.Main_Builder_Input_Folder;
-                            string currentDb = MainForm.CurrentDatabaseServer;
-                            string connectionString = SobekCM.Engine_Library.Database.Engine_Database.Connection_String;
-                            
-                            // Extract just the server and database name from connection string for display
-                            string dbInfo = connectionString;
-                            try 
-                            {
-                                var parts = connectionString.Split(';');
-                                string server = "";
-                                string database = "";
-                                foreach (var part in parts)
-                                {
-                                    if (part.Trim().StartsWith("data source=", StringComparison.OrdinalIgnoreCase))
-                                        server = part.Trim().Substring(12);
-                                    else if (part.Trim().StartsWith("initial catalog=", StringComparison.OrdinalIgnoreCase))
-                                        database = part.Trim().Substring(16);
-                                }
-                                if (!string.IsNullOrEmpty(server) && !string.IsNullOrEmpty(database))
-                                    dbInfo = $"{server} / {database}";
-                            }
-                            catch { }
-
+                             string builderInputFolder = SobekCM.Engine_Library.ApplicationState.Engine_ApplicationCache_Gateway.Settings.Builder.Main_Builder_Input_Folder;
+                             string currentDb = MainForm.CurrentDatabaseServer;
+                             // Use the configured connection string for display
+                             string dbInfo = SobekCM.Engine_Library.Database.Engine_Database.Connection_String;
+                             try 
+                             {
+                                 var parts = dbInfo.Split(';');
+                                 string server = "";
+                                 string database = "";
+                                 foreach (var part in parts)
+                                 {
+                                     if (part.Trim().StartsWith("data source=", StringComparison.OrdinalIgnoreCase))
+                                         server = part.Trim().Substring(12);
+                                     else if (part.Trim().StartsWith("initial catalog=", StringComparison.OrdinalIgnoreCase))
+                                         database = part.Trim().Substring(16);
+                                 }
+                                 if (!string.IsNullOrEmpty(server) && !string.IsNullOrEmpty(database))
+                                     dbInfo = $"{server} / {database}";
+                             }
+                             catch { }
+ 
                              string diagnosticMessage = $"DIAGNOSTIC INFO - Please verify before proceeding:\n\n" +
                                  $"Current Database: {currentDb}\n" +
-                                 $"DB Connection: {dbInfo}\n" +
-                                 $"Product Version: {VersionConfigSettings.AppVersion}\n\n" +
+                                 $"\n" +
                                  $"METS files will be written to:\n{builderInputFolder}\n\n" +
                                  $"Is this the correct inbound folder for the {currentDb} environment?\n\n" +
                                  $"Click YES to proceed with import, NO to cancel.";
+                            // Log the builder input folder value for debugging/tracing
+                            LoggingWindow.Log($"[Import Records] Builder Input Folder: {builderInputFolder}");
 
                             DialogResult result = MessageBox.Show(diagnosticMessage, "Confirm Builder Input Folder", 
                                 MessageBoxButtons.YesNo, MessageBoxIcon.Question);

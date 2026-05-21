@@ -131,6 +131,7 @@ namespace SobekCM.Management_Tool.Importer
 
                         // Save to the tracking database
                         bool success = true;
+                        LoggingWindow.Log("builderInputFolder=[" + SobekCM.Engine_Library.ApplicationState.Engine_ApplicationCache_Gateway.Settings.Builder.Main_Builder_Input_Folder + "].");
                         LoggingWindow.Log($"  Checking existence and saving to database...");
                         success = base.Check_For_Existence_And_Save(newItem, row, String.Empty, matching_message, "Spreadsheet Importer GUI", preview_mode);
                         LoggingWindow.Log($"  Database save result: {(success ? "SUCCESS" : "FAILED")}");

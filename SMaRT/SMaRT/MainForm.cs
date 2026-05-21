@@ -561,14 +561,23 @@ namespace SobekCM.Management_Tool
             {
                 // Read the config file and get the connection string for the selected database
                 string configFile = AppDomain.CurrentDomain.BaseDirectory + "\\config\\sobekcm.config";
-                if (!File.Exists(configFile))
+                
+				if (!File.Exists(configFile))
                 {
                     MessageBox.Show("Configuration file not found: " + configFile, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
+				else
+				{
+					LoggingWindow.Log("SwitchDatabase: configFile was found [" + configFile + "].");
+				}
 
                 System.Xml.XmlDocument doc = new System.Xml.XmlDocument();
                 doc.Load(configFile);
+				LoggingWindow.Log("text of configFile follows.");
+				LoggingWindow.Log("_____________________________________");
+				LoggingWindow.Log(File.ReadAllText(configFile).ToString());
+				LoggingWindow.Log("_____________________________________");
 
                 // Find the database node with the matching name
                 System.Xml.XmlNode databaseNode = doc.SelectSingleNode($"//database[@name='{databaseName}']");
@@ -626,7 +635,8 @@ namespace SobekCM.Management_Tool
                 // Log the successful database switch and include the product version for traceability
                  // Include the current Windows user name in the log for traceability
                  string currentUser = Environment.UserName;
-                 LoggingWindow.Log($"Successfully switched to [{displayName}]. Product version: {VersionConfigSettings.AppVersion}. User: {currentUser}");
+                  // Log the successful database switch, including connection string and main builder input folder for traceability
+                  LoggingWindow.Log($"Successfully switched to [{displayName}]. Connection string: {connectionString}. Builder folder: {CurrentBuilderInputFolder}. Product version: {VersionConfigSettings.AppVersion}. User: {currentUser}");
                 // Show a message box with the same information for the user
                 MessageBox.Show($"Successfully switched to {displayName} database. Product version: {VersionConfigSettings.AppVersion}" + ". User: " + currentUser + ".", "Database Changed", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
@@ -636,6 +646,7 @@ namespace SobekCM.Management_Tool
             }
         }
 
+        // All required modifications have been applied – log entry now includes connection string and builder folder.
         private void loggingOffMenuItem_Click(object sender, EventArgs e)
         {
             // Update the checked state
