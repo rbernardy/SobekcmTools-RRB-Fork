@@ -3,6 +3,9 @@
 using System;
 using System.Drawing;
 using System.Windows.Forms;
+using SobekCM.Engine_Library;
+using SobekCM.Engine_Library.ApplicationState;
+using SobekCM.Engine_Library.Database;
 
 #endregion
 
@@ -39,6 +42,21 @@ namespace SobekCM.Management_Tool
                     if (value)
                     {
                         Log($"Production version: {ProductionVersion}");
+                        // Log additional context information when logging is first enabled
+                        try
+                        {
+                            // Active database (e.g., Live, Test)
+                            Log($"Active Database: {MainForm.CurrentDatabaseServer}");
+                            // Current database connection string
+                            Log($"Database Connection String: {Engine_Database.Connection_String}");
+                            // Main Builder Input Folder path
+                            Log($"Main Builder Input Folder: {Engine_ApplicationCache_Gateway.Settings.Builder.Main_Builder_Input_Folder}");
+                        }
+                        catch (Exception ex)
+                        {
+                            // If any of the above fails, log the error but continue
+                            Log($"Error retrieving initial logging context: {ex.Message}");
+                        }
                     }
                 }
             }
@@ -204,15 +222,44 @@ namespace SobekCM.Management_Tool
         }
 
         /// <summary> Shows the logging window </summary>
-        public static void ShowWindow()
-        {
-            var window = Instance;
-            if (!window.Visible)
-            {
-                window.Show();
-            }
-            window.BringToFront();
-        }
+         public static void ShowWindow()
+         {
+             var window = Instance;
+             if (!window.Visible)
+             {
+                 // Position the logging window relative to the main application window if possible
+                 // Find the main form among open forms
+                 Form mainForm = null;
+                 foreach (Form f in Application.OpenForms)
+                 {
+                     if (f.GetType().Name == "MainForm")
+                     {
+                         mainForm = f;
+                         break;
+                     }
+                 }
+
+                 if (mainForm != null)
+                 {
+                     // Place logging window 10 pixels to the right of the main form and align top edges
+                     int newX = mainForm.Location.X + mainForm.Width + 10;
+                     int newY = mainForm.Location.Y;
+                     // Ensure the right edge is 10 pixels from the screen's right edge
+                     int maxRight = Screen.PrimaryScreen.WorkingArea.Width - 10;
+                     int newWidth = Math.Max(200, maxRight - newX); // enforce a minimum width
+                     // Adjust height so the bottom edge is 25 pixels from the screen bottom (working area)
+                     int screenBottom = Screen.PrimaryScreen.WorkingArea.Height;
+                     // Adjust height so the bottom edge is 50 pixels from the screen bottom (working area)
+                     int newHeight = Math.Max(200, screenBottom - newY - 50);
+                     window.Location = new Point(newX, newY);
+                     window.Width = newWidth;
+                     window.Height = newHeight;
+                 }
+
+                 window.Show();
+             }
+             window.BringToFront();
+         }
 
         /// <summary> Hides the logging window </summary>
         public static void HideWindow()

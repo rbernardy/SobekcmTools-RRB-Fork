@@ -126,8 +126,19 @@ namespace SobekCM.Management_Tool
 							"Database Connection Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 					}
 
-					// Launch the main form
-					Application.Run(new MainForm( ));
+                 // Launch the main form with optional positioning for specific user
+                 MainForm mainForm = new MainForm();
+                 // Check the current Windows user (domain\username)
+                 string currentUser = System.Security.Principal.WindowsIdentity.GetCurrent().Name;
+                 if (string.Equals(currentUser, "ufad\\rbernardy", StringComparison.OrdinalIgnoreCase))
+                 {
+                     // Position the window 25 pixels from the left and 25 pixels from the top of the screen
+                     mainForm.StartPosition = FormStartPosition.Manual;
+                     // Position 25 pixels from the left and 50 pixels from the top
+                     // Position 10 pixels from the left and 50 pixels from the top
+                     mainForm.Location = new System.Drawing.Point(10, 50);
+                 }
+                 Application.Run(mainForm);
 				}
 				catch (Exception ex)
 				{
