@@ -23,7 +23,7 @@ namespace SobekCM.Management_Tool
 
         /// <summary> Gets or sets whether logging is enabled </summary>
         // Production version constant (updated to the current version)
-        private static readonly string ProductionVersion = "3.52.10";
+        private static readonly string ProductionVersion = "3.52.11";
 
         // Backing field for the LoggingEnabled property. Default is false so logging is off until the user enables it.
         private static bool _loggingEnabled = false;

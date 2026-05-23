@@ -105,10 +105,14 @@ namespace SobekCM.Management_Tool
                 loggingOffMenuItem.Checked = false;
                 loggingOnMenuItem.Checked = true;
                 LoggingWindow.LoggingEnabled = true;
-                LoggingWindow.ShowWindow();
-				LoggingWindow.Log("Product version=" + VersionConfigSettings.AppVersion);
+                // Log additional context information immediately after enabling logging
+                LoggingWindow.Log("Product version=" + VersionConfigSettings.AppVersion);
                 LoggingWindow.Log("Developer mode enabled for user: " + currentUser);
-            }
+          		LoggingWindow.Log($"Active Database: {CurrentDatabaseServer}");
+                LoggingWindow.Log($"Database Connection String: {Engine_Database.Connection_String}");
+                LoggingWindow.Log($"Main Builder Input Folder: {Engine_ApplicationCache_Gateway.Settings.Builder.Main_Builder_Input_Folder}");
+             	LoggingWindow.ShowWindow();
+         	}
         }
 
         /// <summary> Gets the default retrieve URL for developer mode, or empty string if not in developer mode </summary>
@@ -668,8 +672,10 @@ namespace SobekCM.Management_Tool
             LoggingWindow.LoggingEnabled = true;
             LoggingWindow.ShowWindow();
             LoggingWindow.Log("Logging enabled");
-        }
-
-
+			//LoggingWindow.Log($"ProductVersion={ProductVersion}");
+			LoggingWindow.Log($"Active Database: {CurrentDatabaseServer}");
+            LoggingWindow.Log($"Database Connection String: {Engine_Database.Connection_String}");
+            LoggingWindow.Log($"Main Builder Input Folder: {Engine_ApplicationCache_Gateway.Settings.Builder.Main_Builder_Input_Folder}");
+       }
 	}
 }
