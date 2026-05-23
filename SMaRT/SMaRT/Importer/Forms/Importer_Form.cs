@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using System.Drawing.Imaging;
 using System.Drawing.Drawing2D;
 using SobekCM.Engine_Library.Database;
+using SobekCM.Management_Tool.Versioning;
 
 namespace SobekCM.Management_Tool.Importer.Forms
 {
@@ -18,8 +19,8 @@ namespace SobekCM.Management_Tool.Importer.Forms
         {
             InitializeComponent();
 
-            // Update window title with database server
-            Text = "Importing Module - (" + MainForm.CurrentDatabaseServer + ")";
+            // Update window title with database server and production version
+            Text = "Importing Module - (" + MainForm.CurrentDatabaseServer + ") (v" + VersionConfigSettings.AppVersion + ")";
 
             baseImporter_Processor.Default_Institution_Code = default_institution_code;
             baseImporter_Processor.Default_Institution_Statement = default_institution_statement;

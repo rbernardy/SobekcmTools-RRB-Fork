@@ -36,8 +36,8 @@ namespace SobekCM.Management_Tool.Reports
 	        InitializeComponent();
 	        BackColor = Color.FromArgb(240, 240, 240);
 
-            // Update window title with database server
-            Text = "Reporting Module - (" + MainForm.CurrentDatabaseServer + ")";
+            // Update window title with database server and production version
+            Text = "Reporting Module - (" + MainForm.CurrentDatabaseServer + ") (v" + VersionConfigSettings.AppVersion + ")";
 
 	        string username = Environment.UserName.ToLower();
 	        if ((username.IndexOf("msulliva") < 0) && (username.IndexOf("laurien") < 0))
@@ -204,7 +204,7 @@ namespace SobekCM.Management_Tool.Reports
 	        this.MinimumSize = new System.Drawing.Size(483, 418);
 	        this.Name = "Reports_Form";
 	        this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-	        this.Text = "Reporting Module";
+        this.Text = "Reporting Module - (" + MainForm.CurrentDatabaseServer + ") (v" + VersionConfigSettings.AppVersion + ")";
 	        this.panel1.ResumeLayout(false);
 	        this.panel1.PerformLayout();
 	        this.ResumeLayout(false);

@@ -46,6 +46,9 @@ namespace SobekCM.Management_Tool
         // Static property to track current database server
         public static string CurrentDatabaseServer { get; set; } = "Live";
 
+        // Production version constant (updated to the current version)
+        private const string ProductionVersion = "3.52.11";
+
         // Static property to hold the refreshed Main Builder Input Folder path after a DB switch
         // This ensures the folder path is up‑to‑date and not cached from application start.
         public static string CurrentBuilderInputFolder { get; private set; } = string.Empty;
@@ -60,7 +63,8 @@ namespace SobekCM.Management_Tool
 	        BackColor = Color.FromArgb(240, 240, 240);
 
 	        // Personalize several labels and controls now for the SobekCM Instance Name
-	        mainLabel.Text = Engine_ApplicationCache_Gateway.Settings.System.System_Abbreviation + " Manager";
+            // Set main label to just the manager title without DB mode or version
+            mainLabel.Text = $"{Engine_ApplicationCache_Gateway.Settings.System.System_Abbreviation} Manager";
 	        linkLabel1.Text = "Retrieve " + Engine_ApplicationCache_Gateway.Settings.System.System_Abbreviation + " Packages";
 	        retrievePackagesMenuItem.Text = "Retrieve " + Engine_ApplicationCache_Gateway.Settings.System.System_Abbreviation + " Packages";
 	        aboutMenuItem.Text = "About '" + Engine_ApplicationCache_Gateway.Settings.System.System_Abbreviation + " Manager'";
@@ -146,7 +150,8 @@ namespace SobekCM.Management_Tool
         /// <summary> Updates the window title to include the current database server </summary>
         private void UpdateWindowTitle()
         {
-            this.Text = $"SobekCM Management and Reporting Tool (SMaRT) - ({CurrentDatabaseServer})";
+            // Include the production version in the window title alongside the DB server mode
+            this.Text = $"SobekCM Management and Reporting Tool (SMaRT) - ({CurrentDatabaseServer}) (v{ProductionVersion})";
         }
 
 	    #endregion

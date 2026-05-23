@@ -71,7 +71,8 @@ namespace SobekCM.Management_Tool
             sobekCM_Item_Discovery_Panel1.Finish_Loading_Data();
 
             // Set some personalization and customization for the SobekCM Instance Name
-            Text = Engine_ApplicationCache_Gateway.Settings.System.System_Abbreviation + " Item Discovery Form - (" + MainForm.CurrentDatabaseServer + ")";
+            // Include production version after DB mode in the window title
+            Text = Engine_ApplicationCache_Gateway.Settings.System.System_Abbreviation + " Item Discovery Form - (" + MainForm.CurrentDatabaseServer + ") (v" + VersionConfigSettings.AppVersion + ")";
             mainLabel.Text = "View " + Engine_ApplicationCache_Gateway.Settings.System.System_Abbreviation + " Items";
             openWebContextMenuItem.Text = "Open Item/Group in " + Engine_ApplicationCache_Gateway.Settings.System.System_Abbreviation;
 

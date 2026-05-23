@@ -13,6 +13,7 @@ using System.Xml;
 using SobekCM.Engine_Library;
 using SobekCM.Engine_Library.ApplicationState;
 using SobekCM.Engine_Library.Settings;
+using SobekCM.Management_Tool.Versioning;
 
 #endregion
 
@@ -44,7 +45,8 @@ namespace SobekCM.Management_Tool
 
 
             // Personalize several labels and controls now for the SobekCM Instance Name
-            Text = "Retrieve " + Engine_ApplicationCache_Gateway.Settings.System.System_Abbreviation + " Items Form - (" + MainForm.CurrentDatabaseServer + ")";
+            // Include production version after DB mode in the window title
+            Text = "Retrieve " + Engine_ApplicationCache_Gateway.Settings.System.System_Abbreviation + " Items Form - (" + MainForm.CurrentDatabaseServer + ") (v" + VersionConfigSettings.AppVersion + ")";
             mainLabel.Text = "Retrieve " + Engine_ApplicationCache_Gateway.Settings.System.System_Abbreviation + " Items";
             queryLabel.Text = Engine_ApplicationCache_Gateway.Settings.System.System_Abbreviation + " Query:";
 
